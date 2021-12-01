@@ -1,5 +1,5 @@
 functionality:
-  name: submission_170636
+  name: submission_171123
   namespace: predict_modality_methods
   
   # metadata for your method
@@ -36,40 +36,24 @@ functionality:
       example: "output.h5ad"
       description: Dataset with predicted values for modality2.
       required: true
-    # additional parameters
-    - name: "--distance_method"
-      type: "string"
-      default: "minkowski"
-      description: The distance metric to use. Possible values include `euclidean` and `minkowski`.
-    - name: "--n_pcs"
-      type: "integer"
-      default: 50
-      description: Number of components to use for dimensionality reduction.
       
   # files your script needs
   resources:
     - type: python_script
-      path: script_sep2groups_rep5.py
-  
-  # resources for unit testing your component
-  tests:
-    - type: python_script
-      path: test.py
-    - path: sample_data
+      path: script.py
       
 # target platforms
 platforms:
   - type: docker
-    image: dataintuitive/randpy:py3.8
+    image: pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime
+    run_args: [ "--gpus all" ]
     setup:
-
       - type: python
         packages:
           - scikit-learn
+          - catboost
           - anndata
-          - pandas
-          - numpy
           - scanpy
-
+          - tqdm
   - type: nextflow
-    labels: [ vhighmem, vvhightime, vhighcpu ]
+    labels: [ vhighmem, vvhightime, highcpu, gpu]
