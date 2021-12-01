@@ -1,6 +1,6 @@
 functionality:
   name: cajal_train
-  namespace: predict_mdality_methods
+  namespace: predict_modality_methods
   
   # metadata for your method
   version: dev
