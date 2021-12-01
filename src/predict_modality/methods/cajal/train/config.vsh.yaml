@@ -1,0 +1,63 @@
+functionality:
+  name: cajal_train
+  namespace: predict_mdality_methods
+  
+  # metadata for your method
+  version: dev
+  description: A description for your method.
+  authors:
+    - name: Anna Laddach
+      email: anna.laddach@crick.ac.uk
+      roles: [ author, maintainer ]
+      props: { github: AnnaLaddach, orcid: "0000-0001-5552-6534" }
+    - name: Roman Laddach
+      email: roman.laddach@kcl.ac.uk
+      roles: [ author, maintainer ]
+      props: { github: rladdach, orcid: "0000-0002-0118-4548" }
+    - name: Michael Shapiro
+      email: michael.shapiro@crick.ac.uk
+      roles: [ author, maintainer ]
+      props: { github: michaeldshapiro, orcid: "0000-0002-2769-9320" }
+      
+  # parameters
+  arguments:
+    # required inputs
+    - name: "--input_train_mod1"
+      type: "file"
+      example: "dataset_mod1.h5ad"
+      description: Censored dataset, training cells.
+      required: true
+    - name: "--input_train_mod2"
+      type: "file"
+      example: "dataset_mod2.h5ad"
+      description: Censored dataset.
+      required: true
+
+    # required outputs
+    - name: "--output_pretrain"
+      type: "file"
+      direction: "output"
+      example: "pretrain_model"
+      description: Path to the directory containing a pretrained model.
+      required: true
+      
+  # files your script needs
+  resources:
+    - type: python_script
+      path: script.py
+      
+# target platforms
+platforms:
+  - type: docker
+    image: tensorflow/tensorflow:2.7.0-gpu
+    run_args: [ "--gpus all" ]
+    setup:
+      - type: python
+        packages:
+          - scikit-learn
+          - anndata
+          - scanpy
+          - tensorflow
+          - tensorflow_probability
+  - type: nextflow
+    labels: [ vhighmem, vvhightime, vhighcpu, gpu]
