@@ -1,0 +1,76 @@
+functionality:
+  name: clue_train
+  namespace: predict_modality_methods
+
+  # metadata for your method
+  version: dev
+  description: Cross-linked unified embedding for single-cell multi-omics data integration
+  authors:
+    - name: Zhi-Jie Cao
+      email: caozj@mail.cbi.pku.edu.cn
+      roles: [ author, maintainer ]
+      props: { github: Jeff1995, orcid: "0000-0002-0026-671X" }
+    - name: Xin-Ming Tu
+      email: xinmingtu@pku.edu.cn
+      roles: [ author, maintainer ]
+      props: { github: XinmingTu }
+    - name: Chen-Rui Xia
+      email: xiachenrui@mail.cbi.pku.edu.cn
+      roles: [ author, maintainer ]
+      props: { github: xiachenrui }
+
+  # parameters
+  arguments:
+    # required inputs
+    - name: "--input_train_mod1"
+      type: "file"
+      example: "dataset_censored.h5ad"
+      description: "The censored shuffled train mod1 profiles."
+      required: true
+    - name: "--input_train_mod2"
+      type: "file"
+      example: "dataset_censored.h5ad"
+      description: "The censored shuffled train mod2 profiles."
+      required: true
+    - name: "--input_train_sol"
+      type: "file"
+      example: "dataset_solution.h5ad"
+      description: "The pairing of train mod1&mod2 profiles."
+      required: true
+
+    # required outputs
+    - name: "--output_pretrain"
+      type: "file"
+      example: "pretrain_model"
+      direction: "output"
+      description: Path to the directory containing a pretrained model.
+      required: true
+
+  # files your script needs
+  resources:
+    - type: python_script
+      path: script.py
+    - path: ../resources/utils.py
+    - path: ../resources/scglue-0.1.1-py3-none-any.whl
+
+# target platforms
+platforms:
+  - type: docker
+    image: nvidia/cuda:11.0-cudnn8-runtime-ubuntu18.04
+    setup:
+      - type: apt
+        packages:
+          - python3-pip
+          - python3.8-dev
+      - type: docker
+        run:
+          - update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10
+          - update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 10
+          - python -m pip install --upgrade pip
+          - pip install scglue-0.1.1-py3-none-any.whl
+          - pip install pyyaml
+        resources:
+          - scglue-0.1.1-py3-none-any.whl scglue-0.1.1-py3-none-any.whl
+
+  - type: nextflow
+    labels: [ highmem, hightime, highcpu, gpu ]

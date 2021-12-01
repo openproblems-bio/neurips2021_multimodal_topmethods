@@ -141,7 +141,7 @@ adata = ad.AnnData(
     var=input_train_mod2.var,
     uns={
         'dataset_id': input_train_mod1.uns['dataset_id'],
-        'method_id': meta["functionality_name"],
+        'method_id': "cajal",
     },
 )
 
