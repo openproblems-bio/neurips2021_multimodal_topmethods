@@ -1,3 +1,4 @@
+import os
 import sys
 
 import torch
@@ -36,6 +37,8 @@ meta = {
 sys.path.append(meta['resources_dir'])
 from helper_functions import train_and_valid, lsiTransformer, ModalityMatchingDataset
 from helper_functions import ModelRegressionAtac2Gex, ModelRegressionAdt2Gex, ModelRegressionGex2Adt, ModelRegressionGex2Atac
+
+os.makedirs(par['output_pretrain'], exist_ok=True)
 
 print("Start train")
 
