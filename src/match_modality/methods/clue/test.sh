@@ -98,7 +98,7 @@ bin/nextflow run "$PIPELINE_REPO" \
   -r "$PIPELINE_VERSION" \
   -main-script "src/$task_id/workflows/evaluate_submission/main.nf" \
   --solutionDir "output/datasets/$task_id" \
-  --predictions "output/predictions/$task_id/"'**.${method_id}_run.output.h5ad' \
+  --predictions "output/predictions/$task_id/**.${method_id}_run.output.h5ad" \
   --publishDir "output/evaluation/$task_id/$method_id/" \
   -latest \
   -resume \
