@@ -255,29 +255,27 @@ class ModelRegressionGex2Adt(nn.Module):
         x = F.gelu(self.output(x))
         return x
 
-
-def train_and_valid(model, optimizer,loss_fn, dataloader_train, dataloader_test, name_model, device):
+def train_and_valid(model, optimizer, loss_fn, dataloader_train, dataloader_test, name_model, device):
     best_score = 100000
     for i in range(100):
         train_losses = []
         test_losses = []
         model.train()
+
         for x, y in dataloader_train:
-                
-                optimizer.zero_grad()
-                output = model(x.to(device))
-                loss = torch.sqrt(loss_fn(output, y.to(device)))
-                loss.backward()
-                train_losses.append(loss.item())
-                optimizer.step()
-                
+            optimizer.zero_grad()
+            output = model(x.float().to(device))
+            loss = torch.sqrt(loss_fn(output, y.float().to(device)))
+            loss.backward()
+            train_losses.append(loss.item())
+            optimizer.step()
            
         model.eval()
         with torch.no_grad():
             for x, y in dataloader_test:
-                output = model(x.to(device))
+                output = model(x.float().to(device))
                 output[output<0] = 0.0
-                loss = torch.sqrt(loss_fn(output, y.to(device)))
+                loss = torch.sqrt(loss_fn(output, y.float().to(device)))
                 test_losses.append(loss.item())
         
         outputs = []
@@ -285,15 +283,15 @@ def train_and_valid(model, optimizer,loss_fn, dataloader_train, dataloader_test,
         model.eval()
         with torch.no_grad():
             for x, y in dataloader_test:
-                output = model(x.to(device))
+                output = model(x.float().to(device))
                 
                 outputs.append(output.detach().cpu().numpy())
-                targets.append(y.detach().cpu().numpy())
+                targets.append(y.float().detach().cpu().numpy())
         cat_outputs = np.concatenate(outputs)
         cat_targets = np.concatenate(targets)
         cat_outputs[cat_outputs<0.0] = 0
         
-        if(best_score > rmse(cat_targets,cat_outputs)):
+        if best_score > rmse(cat_targets,cat_outputs):
             torch.save(model.state_dict(), name_model)
             best_score = rmse(cat_targets,cat_outputs)
     print("best rmse: ", best_score)

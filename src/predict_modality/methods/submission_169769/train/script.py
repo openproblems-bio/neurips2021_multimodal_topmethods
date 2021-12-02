@@ -11,7 +11,7 @@ import pickle
 
 #check gpu available
 if (torch.cuda.is_available()):
-    device = 'cuda:2' #switch to current device
+    device = 'cuda:0' #switch to current device
     print('current device: gpu')
 else:
     device = 'cpu'
@@ -98,10 +98,10 @@ elif mod1 == 'GEX' and mod2 == 'ATAC':
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.00001806762345275399, weight_decay=0.0004084171379280058)
 
 loss_fn = torch.nn.MSELoss()
-train_and_valid(model, optimizer, loss_fn, dataloader_train, dataloader_test, 'model.pt', device)
+train_and_valid(model, optimizer, loss_fn, dataloader_train, dataloader_test, par['output_pretrain'] + '/model.pt', device)
 
 if mod1 != "ADT":
-    with open('lsi_transformer.pickle', 'wb') as f:
+    with open(par['output_pretrain'] + '/lsi_transformer.pickle', 'wb') as f:
         pickle.dump(lsi_transformer_gex, f)
 
 print("End train")
