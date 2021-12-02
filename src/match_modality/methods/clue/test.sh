@@ -1,8 +1,8 @@
 #!/bin/bash
 
-DATASET_PATH=output/datasets_phase2/phase2/match_modality/openproblems_bmmc_cite_phase2_rna/openproblems_bmmc_cite_phase2_rna.censor_dataset
-PRETRAIN_PATH=output/pretrain/clue/openproblems_bmmc_cite_phase1v2_rna.clue_train.output_pretrain/
-PRED_PATH=output/predictions/phase2/match_modality/openproblems_bmmc_cite_phase2_rna/openproblems_bmmc_cite_phase2_rna.
+DATASET_PATH=output/datasets/match_modality/openproblems_bmmc_cite_phase2_rna/openproblems_bmmc_cite_phase2_rna.censor_dataset
+PRETRAIN_PATH=output/pretrain/clue/openproblems_bmmc_cite_phase2_mod2.clue_train.output_pretrain/
+PRED_PATH=output/predictions/match_modality/openproblems_bmmc_cite_phase2_rna/openproblems_bmmc_cite_phase2_rna.
 
 target/docker/match_modality_methods/train/clue_train \
   --input_train_mod1 ${DATASET_PATH}.output_train_mod1.h5ad \

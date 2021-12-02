@@ -19,5 +19,4 @@ function aws_sync {
   fi
 }
 
-aws_sync sync "s3://openproblems-bio/public/phase1v2-data/" "output/datasets_phase1v2/"
-aws_sync sync "s3://openproblems-bio/public/phase2-data/" "output/datasets_phase2/"
+aws_sync sync "s3://openproblems-bio/public/phase2-private-data/" "output/datasets"
