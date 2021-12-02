@@ -37,6 +37,7 @@ functionality:
   resources:
     - type: python_script
       path: script.py
+    - path: ../resources/helper_functions.py
       
 # target platforms
 platforms:
