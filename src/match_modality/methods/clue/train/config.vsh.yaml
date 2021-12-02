@@ -57,6 +57,7 @@ functionality:
 platforms:
   - type: docker
     image: nvidia/cuda:11.0-cudnn8-runtime-ubuntu18.04
+    run_args: [ "--gpus all" ]
     setup:
       - type: apt
         packages:
