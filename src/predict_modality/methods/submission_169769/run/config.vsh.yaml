@@ -1,0 +1,62 @@
+functionality:
+  name: submission_171129_run
+  namespace: predict_modality_methods
+  
+  # metadata for your method
+  version: dev
+  description: A description for your method.
+  authors:
+    - name: John Doe
+      email: johndoe@youremailprovider.com
+      roles: [ author, maintainer ]
+      props: { github: johndoe, orcid: "0000-1111-2222-3333" }
+      
+  # parameters
+  arguments:
+    # required inputs
+    - name: "--input_train_mod1"
+      type: "file"
+      example: "dataset_mod1.h5ad"
+      description: Censored dataset, training cells.
+      required: true
+    - name: "--input_test_mod1"
+      type: "file"
+      example: "dataset_mod1.h5ad"
+      description: Censored dataset, test cells.
+      required: true
+    - name: "--input_train_mod2"
+      type: "file"
+      example: "dataset_mod2.h5ad"
+      description: Censored dataset.
+      required: true
+    - name: "--input_pretrain"
+      type: "file"
+      example: "pretrain_model"
+      description: Path to the directory containing a pretrained model.
+      required: true
+    # required outputs
+    - name: "--output"
+      type: "file"
+      direction: "output"
+      example: "output.h5ad"
+      description: Dataset with predicted values for modality2.
+      required: true
+      
+  # files your script needs
+  resources:
+    - type: python_script
+      path: script.py
+      
+# target platforms
+platforms:
+  - type: docker
+    image: "pytorch/pytorch:1.9.0-cuda10.2-cudnn7-runtime"
+    setup:
+      - type: python
+        packages:
+          - anndata
+          - scikit-learn
+          - networkx
+
+  - type: nextflow
+    labels: [ lowmem, lowtime, lowcpu ]
