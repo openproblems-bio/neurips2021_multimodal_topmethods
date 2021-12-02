@@ -87,7 +87,7 @@ elif mod1 == 'GEX' and mod2 == 'ADT':
     dataloader_test = DataLoader(dataset_test, 64, shuffle = False, num_workers = 8)
 
     model = ModelRegressionGex2Adt(256,134).to(device)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=0.000034609210829678734,weight_decay=0.0009965881574697426)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.000034609210829678734, weight_decay=0.0009965881574697426)
 
 
 elif mod1 == 'GEX' and mod2 == 'ATAC':
