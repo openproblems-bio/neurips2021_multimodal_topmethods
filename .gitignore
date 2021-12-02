@@ -1,2 +1,6 @@
 output
 *.pyc
+target
+work
+.nextflow*
+log.txt

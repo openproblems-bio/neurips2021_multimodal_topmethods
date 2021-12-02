@@ -103,3 +103,5 @@ bin/nextflow run "$PIPELINE_REPO" \
   -latest \
   -resume \
   -c "src/resources/nextflow_moremem.config"
+
+cat "output/evaluation/$task_id/$method_id/output.final_scores.output_json.json"
