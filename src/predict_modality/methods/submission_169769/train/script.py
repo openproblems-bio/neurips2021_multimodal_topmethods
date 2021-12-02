@@ -1,11 +1,10 @@
-import torch
+import sys
 
+import torch
 from torch.utils.data import DataLoader
 
 import anndata as ad
 
-import sklearn.neighbors
-import sklearn.utils.extmath
 from sklearn.model_selection import train_test_split
 
 import pickle
