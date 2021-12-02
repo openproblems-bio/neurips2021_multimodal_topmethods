@@ -34,7 +34,7 @@ meta = {
 ## VIASH END
 
 sys.path.append(meta['resources_dir'])
-from helper_functions import train_and_valid, rmse, lsiTransformer, ModalityMatchingDataset
+from helper_functions import train_and_valid, lsiTransformer, ModalityMatchingDataset
 from helper_functions import ModelRegressionAtac2Gex, ModelRegressionAdt2Gex, ModelRegressionGex2Adt, ModelRegressionGex2Atac
 
 print("Start train")
@@ -98,7 +98,7 @@ elif mod1 == 'GEX' and mod2 == 'ATAC':
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.00001806762345275399, weight_decay=0.0004084171379280058)
 
 loss_fn = torch.nn.MSELoss()
-train_and_valid(model, optimizer, loss_fn, dataloader_train, dataloader_test, 'model.pt')
+train_and_valid(model, optimizer, loss_fn, dataloader_train, dataloader_test, 'model.pt', device)
 
 if mod1 != "ADT":
     with open('lsi_transformer.pickle', 'wb') as f:

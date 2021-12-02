@@ -1,3 +1,4 @@
+import torch
 
 from torch import nn
 import torch.nn.functional as F
@@ -255,7 +256,7 @@ class ModelRegressionGex2Adt(nn.Module):
         return x
 
 
-def train_and_valid(model, optimizer,loss_fn, dataloader_train, dataloader_test, name_model):
+def train_and_valid(model, optimizer,loss_fn, dataloader_train, dataloader_test, name_model, device):
     best_score = 100000
     for i in range(100):
         train_losses = []
