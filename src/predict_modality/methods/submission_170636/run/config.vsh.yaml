@@ -49,7 +49,7 @@ functionality:
   # files your script needs
   resources:
     - type: python_script
-      path: script_sep2groups_rep5.py
+      path: script.py
       
 # target platforms
 platforms:
