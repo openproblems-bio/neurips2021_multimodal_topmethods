@@ -83,7 +83,7 @@ outputs = []
 model.eval()
 with torch.no_grad():
     for x in dataloader_test:
-        output = model(x)
+        output = model(x.float())
         outputs.append(output.detach().cpu().numpy())
 
 outputs = np.concatenate(outputs)
