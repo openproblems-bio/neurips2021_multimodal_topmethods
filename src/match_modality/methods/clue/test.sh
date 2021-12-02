@@ -5,9 +5,6 @@ export NXF_VER=21.04.1
 export PIPELINE_VERSION=1.4.0
 task_id=match_modality
 
-PRETRAIN_PATH=output/pretrain/clue/openproblems_bmmc_cite_phase2_mod2.clue_train.output_pretrain/
-PRED_PATH=output/predictions/match_modality/openproblems_bmmc_cite_phase2_rna/openproblems_bmmc_cite_phase2_rna.
-
 # CITE GEX2ADT
 dataset_id=openproblems_bmmc_cite_phase2_rna
 dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset

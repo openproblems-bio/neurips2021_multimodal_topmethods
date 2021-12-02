@@ -1,0 +1,93 @@
+functionality:
+  name: submission_171129_run
+  namespace: predict_modality_methods
+  
+  # metadata for your method
+  version: dev
+  description: A description for your method.
+  authors:
+    - name: Hongzhi Wen
+      email: wenhongz@msu.edu
+      roles: [ author, maintainer ]
+    - name: Jiayuan Ding
+      email: dingjia5@msu.edu
+      roles: [ author, maintainer ]
+    - name: Wei Jin
+      email: jinwei2@msu.edu
+      roles: [ author ]
+    - name: Xiaoyan Li
+      email: lixiaoy5@msu.edu
+      roles: [ author ]
+    - name: Zhaoheng Li
+      email: zli1@macalester.edu
+      roles: [ author ]
+    - name: Haoyu Han
+      email: hanhaoy1@msu.edu
+      roles: [ assistant ]
+    - name: Yuying Xie
+      email: xyy@msu.edu
+      roles: [ advisor ]
+    - name: Jiliang Tang
+      email: tangjili@msu.edu
+      roles: [ advisor ]
+      
+      
+  # parameters
+  arguments:
+    # required inputs
+    - name: "--input_train_mod1"
+      type: "file"
+      example: "dataset_mod1.h5ad"
+      description: Censored dataset, training cells.
+      required: true
+    - name: "--input_test_mod1"
+      type: "file"
+      example: "dataset_mod1.h5ad"
+      description: Censored dataset, test cells.
+      required: true
+    - name: "--input_train_mod2"
+      type: "file"
+      example: "dataset_mod2.h5ad"
+      description: Censored dataset.
+      required: true
+    - name: "--input_pretrain"
+      type: "file"
+      example: "pretrain_model"
+      description: Path to the directory containing a pretrained model.
+      required: true
+    # required outputs
+    - name: "--output"
+      type: "file"
+      direction: "output"
+      example: "output.h5ad"
+      description: Dataset with predicted values for modality2.
+      required: true
+      
+  # files your script needs
+  resources:
+    - type: python_script
+      path: script.py
+    - path: baseline.py
+    - path: graph_util.py
+      
+# target platforms
+platforms:
+  - type: docker
+    image: dataintuitive/randpy:py3.8
+    setup:
+      - type: docker
+        run: [pip install scikit-learn==0.24.1]
+        
+      - type: python
+        packages:
+          #- scikit-learn
+          - anndata
+          - scanpy
+          - numpy
+          - torch
+          - dgl
+          - lightgbm
+          - joblib
+
+  - type: nextflow
+    labels: [ midmem, hightime, lowcpu ]

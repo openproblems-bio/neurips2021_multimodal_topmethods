@@ -15,12 +15,8 @@ import scglue
 logging.basicConfig(level=logging.INFO)
 
 ## VIASH START
-# Anything within this block will be removed by `viash` and will be
-# replaced with the parameters as specified in your config.vsh.yaml.
-
-# dataset_path = 'sample_data/openproblems_bmmc_multiome_starter/openproblems_bmmc_multiome_starter.'
-# dataset_path = 'output/datasets_phase1v2/match_modality/openproblems_bmmc_multiome_phase1v2_rna/openproblems_bmmc_multiome_phase1v2_rna.censor_dataset.output_'
-dataset_path = 'output/datasets_phase1v2/match_modality/openproblems_bmmc_cite_phase1v2_rna/openproblems_bmmc_cite_phase1v2_rna.censor_dataset.output_'
+dataset_path = "output/datasets/match_modality/openproblems_bmmc_cite_phase2_rna/openproblems_bmmc_cite_phase2_rna.censor_dataset.output_"
+pretrain_path = "output/pretrain/match_modality/clue/openproblems_bmmc_cite_phase2_rna.clue_train.output_pretrain/"
 
 par = {
     'input_train_mod1': f'{dataset_path}train_mod1.h5ad',
@@ -28,7 +24,7 @@ par = {
     'input_train_sol': f'{dataset_path}train_sol.h5ad',
     'input_test_mod1': f'{dataset_path}test_mod1.h5ad',
     'input_test_mod2': f'{dataset_path}test_mod2.h5ad',
-    'input_pretrain': 'path/to/model',
+    'input_pretrain': pretrain_path,
     'output': 'output.h5ad'
 }
 meta = {
