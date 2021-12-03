@@ -220,7 +220,7 @@ model.compile(tf.keras.optimizers.Adam(learning_rate = params["lr"]),
             run_eagerly=True)
 
 callbacks = [EarlyStoppingAtMinLoss(patience=5),
-            tf.keras.callbacks.ModelCheckpoint(filepath = par['input_pretrain'] + "/weights.h5",
+            tf.keras.callbacks.ModelCheckpoint(filepath = par['output_pretrain'] + "/weights.h5",
                              monitor='val_loss', save_weights_only=True)]
 
 model.fit(x=X_train, y=Y_train,
@@ -235,6 +235,6 @@ print('Start evaluation')
 eval_results = model.evaluate(X_test, Y_test, batch_size=128)
 print('Total loss, loss1, loss2, loss3, loss4:',eval_results)
 
-f_out = open(par['input_pretrain'] + '/train.log','a+')
+f_out = open(par['output_pretrain'] + '/train.log','a+')
 f_out.write('%s\t%.4f\t%.4f\t%.4f\t%.4f\n'%(suffix, eval_results[1], eval_results[2], eval_results[3], eval_results[4]))
 f_out.close()

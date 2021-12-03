@@ -7,7 +7,7 @@ method_id=submission_170936_171079
 task_id=joint_embedding
 
 # CITE
-dataset_id=openproblems_bmmc_cite_phase2_rna
+dataset_id=openproblems_bmmc_cite_phase2
 dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
 pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
@@ -27,7 +27,7 @@ target/docker/${task_id}_methods/run/${method_id}_run \
   --output ${pred_path}.${method_id}_run.output.h5ad
 
 # MULTIOME
-dataset_id=openproblems_bmmc_multiome_phase2_rna
+dataset_id=openproblems_bmmc_multiome_phase2
 dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
 pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
