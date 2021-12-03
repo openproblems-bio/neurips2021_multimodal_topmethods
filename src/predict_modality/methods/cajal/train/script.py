@@ -80,6 +80,19 @@ class Hyperparameters:
         self.layer_shapes = layer_shapes
         self.n_layers = len(layer_shapes)
 
+def build_model(hp, input_shape, output_shape, min_val, max_val):
+    '''build models given hyperparameters, input_shape, output_shape, min_val and max_val'''
+    model = keras.Sequential()
+    model.add(keras.Input(shape = input_shape))
+    model.add(keras.layers.Dropout(hp.dropout))
+    for i in range(hp.n_layers):
+        model.add(keras.layers.Dense(hp.layer_shapes[i],"relu"))
+    model.add(keras.layers.Dense(output_shape,None))
+    model.add(tf.keras.layers.Lambda(lambda x: tf.clip_by_value(x,min_val,max_val)))
+    model.compile(optimizer='adam',
+                  loss=keras.losses.MeanSquaredError())
+    return model
+
 # define settings
 if mod_1 == "GEX" and mod_2 == "ATAC":
     genes = gex_de_analysis(par['input_explore_mod1'])
@@ -177,13 +190,8 @@ input_shape = X_train.shape[1]
 output_shape = y_train.shape[1]
 
 #build model
-model = keras.Sequential()
-model.add(keras.Input(shape = input_shape))
-model.add(keras.layers.Dropout(hp.dropout))
-for i in range(hp.n_layers):
-    model.add(keras.layers.Dense(hp.layer_shapes[i],"relu"))
-model.add(keras.layers.Dense(output_shape,None))
-model.add(tf.keras.layers.Lambda(lambda x: tf.clip_by_value(x,min_val,max_val)))
-model.compile(optimizer='adam', loss=keras.losses.MeanSquaredError())
+model = build_model(hp, input_shape, output_shape, min_val, max_val)
 history = model.fit(X_train, y_train, shuffle = True, epochs=epochs, batch_size=1000)
+
+# save model
 model.save(par['output_pretrain'] + "/model.h5")
