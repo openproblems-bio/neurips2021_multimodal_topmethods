@@ -45,7 +45,7 @@ if mod_type == 'ATAC':
     mod2_svd = pk.load(open(par['input_pretrain'] + '/svd_mod2.pkl','rb'))
 else:
     mod1_svd = pk.load(open(par['input_pretrain'] + '/svd_mod1.pkl','rb'))
-    mod1_svd = None
+    mod2_svd = None
 
 def svd_transform(mod1_data, mod2_data, mod1_svd, mod2_svd, scale=1e4):
     mod1_data = scale * normalize(mod1_data, norm='l1', axis=1)
