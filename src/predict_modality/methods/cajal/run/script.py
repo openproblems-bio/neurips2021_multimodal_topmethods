@@ -33,104 +33,58 @@ input_test_mod1 = ad.read_h5ad(par['input_test_mod1'])
 mod_1 = input_train_mod1.var["feature_types"][0]
 mod_2 = input_train_mod2.var["feature_types"][0]
 
-try:
 
-    test_total = np.sum(input_test_mod1.layers['counts'].toarray(), axis=1)
+test_total = np.sum(input_test_mod1.layers['counts'].toarray(), axis=1)
 
-    if mod_1 == "GEX":
-        input_test_mod1.X = input_test_mod1.layers['counts']
-        sc.pp.normalize_per_cell(input_test_mod1, counts_per_cell_after=1e6)
-        sc.pp.log1p(input_test_mod1)
-    
-    with open(par["input_pretrain"] + "/genes.pkl", "rb") as f:
-            genes = pickle.load(f)
-            input_test_mod1 = input_test_mod1[:,genes]
-    
-    if mod_1 == "GEX":
-        input_train_mod1.X = input_train_mod1.layers['counts']
-        sc.pp.normalize_per_cell(input_train_mod1, counts_per_cell_after=1e6)
-        sc.pp.log1p(input_train_mod1)
+if mod_1 == "GEX":
+    input_test_mod1.X = input_test_mod1.layers['counts']
+    sc.pp.normalize_per_cell(input_test_mod1, counts_per_cell_after=1e6)
+    sc.pp.log1p(input_test_mod1)
 
-    X_test = input_test_mod1.X.toarray()
+with open(par["input_pretrain"] + "/genes.pkl", "rb") as f:
+        genes = pickle.load(f)
+        input_test_mod1 = input_test_mod1[:,genes]
 
-    test_batches = set(input_test_mod1.obs.batch)
+if mod_1 == "GEX":
+    input_train_mod1.X = input_train_mod1.layers['counts']
+    sc.pp.normalize_per_cell(input_train_mod1, counts_per_cell_after=1e6)
+    sc.pp.log1p(input_train_mod1)
 
-    input_test_mod1.obs["batch_median"] = 0
+X_test = input_test_mod1.X.toarray()
 
-    input_test_mod1.obs["batch_sd"] = 0
+test_batches = set(input_test_mod1.obs.batch)
 
-    for batch in test_batches:
-        input_test_mod1.obs["batch_median"][input_test_mod1.obs.batch == batch] = np.median(test_total[input_test_mod1.obs.batch == batch])
-        input_test_mod1.obs["batch_sd"][input_test_mod1.obs.batch == batch] = np.std(test_total[input_test_mod1.obs.batch == batch])
+input_test_mod1.obs["batch_median"] = 0
 
+input_test_mod1.obs["batch_sd"] = 0
 
-    for i in range(50):
-        X_test = np.column_stack((X_test,test_total))
-
-    for i in range(50):
-        X_test = np.column_stack((X_test,input_test_mod1.obs["batch_median"]))
-
-    for i in range(50):
-        X_test = np.column_stack((X_test,input_test_mod1.obs["batch_sd"]))
-
-    with open(par["input_pretrain"] + "/transformation.pkl", "rb") as f:
-            info = pickle.load(f)
-
-    X_test = X_test.T
-    X_test = (X_test - info["means"])/info["sds"]
-    X_test = X_test.T
+for batch in test_batches:
+    input_test_mod1.obs["batch_median"][input_test_mod1.obs.batch == batch] = np.median(test_total[input_test_mod1.obs.batch == batch])
+    input_test_mod1.obs["batch_sd"][input_test_mod1.obs.batch == batch] = np.std(test_total[input_test_mod1.obs.batch == batch])
 
 
-    #load pretrained model for correct modalities
-    model = tf.keras.models.load_model(par["input_pretrain"] + "/model.h5")
+for i in range(50):
+    X_test = np.column_stack((X_test,test_total))
 
-    #make predictions for y
-    y_pred = model.predict(X_test)
+for i in range(50):
+    X_test = np.column_stack((X_test,input_test_mod1.obs["batch_median"]))
 
-except:
-    logging.info("Error! Falling back to default")
-    input_train = ad.concat(
-        { 'train': input_train_mod1, 'test': input_test_mod1},
-        axis=0,
-        join="outer",
-        label="group",
-        fill_value=0,
-        index_unique="-"
-    )
+for i in range(50):
+    X_test = np.column_stack((X_test,input_test_mod1.obs["batch_sd"]))
+
+with open(par["input_pretrain"] + "/transformation.pkl", "rb") as f:
+        info = pickle.load(f)
+
+X_test = X_test.T
+X_test = (X_test - info["means"])/info["sds"]
+X_test = X_test.T
 
 
-    # Do PCA on the input data
-    logging.info('Performing dimensionality reduction on modality 1 values...')
-    embedder_mod1 = TruncatedSVD(n_components=50)
-    mod1_pca = embedder_mod1.fit_transform(input_train.X)
+#load pretrained model for correct modalities
+model = tf.keras.models.load_model(par["input_pretrain"] + "/model.h5")
 
-    logging.info('Performing dimensionality reduction on modality 2 values...')
-    embedder_mod2 = TruncatedSVD(n_components=50)
-    mod2_pca = embedder_mod2.fit_transform(input_train_mod2.X)
-
-    # split dimred back up
-    X_train = mod1_pca[input_train.obs['group'] == 'train']
-    X_test = mod1_pca[input_train.obs['group'] == 'test']
-    y_train = mod2_pca
-
-    assert len(X_train) + len(X_test) == len(mod1_pca)
-
-    # Get all responses of the training data set to fit the
-    # KNN regressor later on.
-    #
-    # Make sure to use `toarray()` because the output might
-    # be sparse and `KNeighborsRegressor` cannot handle it.
-
-    logging.info('Running Linear regression...')
-
-    reg = LinearRegression()
-
-    # Train the model on the PCA reduced modality 1 and 2 data
-    reg.fit(X_train, y_train)
-    y_pred = reg.predict(X_test)
-
-    # Project the predictions back to the modality 2 feature space
-    y_pred = y_pred @ embedder_mod2.components_
+#make predictions for y
+y_pred = model.predict(X_test)
 
 #convert to sparse matrix
 y_pred = csc_matrix(y_pred)
