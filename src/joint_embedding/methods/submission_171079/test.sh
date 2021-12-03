@@ -15,6 +15,8 @@ pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
 target/docker/match_modality_methods/train/${method_id}_train \
   --input_mod1 ${dataset_path}.output_mod1.h5ad \
   --input_mod2 ${dataset_path}.output_mod2.h5ad \
+  --input_explore_mod1 output/datasets_explore/cite/cite_gex_processed_training.h5ad \
+  --input_explore_mod2 output/datasets_explore/cite/cite_adt_processed_training.h5ad \
   --input_sol ${dataset_path}.output_sol.h5ad \
   --output_pretrain ${pretrain_path}
 
@@ -33,6 +35,8 @@ pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
 target/docker/match_modality_methods/train/${method_id}_train \
   --input_mod1 ${dataset_path}.output_mod1.h5ad \
   --input_mod2 ${dataset_path}.output_mod2.h5ad \
+  --input_explore_mod1 output/datasets_explore/multiome/multiome_gex_processed_training.h5ad \
+  --input_explore_mod2 output/datasets_explore/multiome/multiome_atac_processed_training.h5ad \
   --input_sol ${dataset_path}.output_sol.h5ad \
   --output_pretrain ${pretrain_path}
 
