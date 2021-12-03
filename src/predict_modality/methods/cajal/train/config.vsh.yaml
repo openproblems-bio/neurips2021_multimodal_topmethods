@@ -60,7 +60,7 @@ functionality:
 # target platforms
 platforms:
   - type: docker
-    image: tensorflow/tensorflow:2.7.0-gpu
+    image: tensorflow/tensorflow:2.5.0-gpu
     run_args: [ "--gpus all" ]
     setup:
       - type: python
@@ -69,6 +69,6 @@ platforms:
           - anndata
           - scanpy
           - tensorflow
-          - tensorflow_probability
+          - pandas
   - type: nextflow
-    labels: [ vhighmem, vvhightime, vhighcpu, gpu]
+    labels: [ vhighmem, vvhightime, highcpu, gpu]

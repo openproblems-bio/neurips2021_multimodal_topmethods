@@ -69,7 +69,8 @@ functionality:
 # target platforms
 platforms:
   - type: docker
-    image: dataintuitive/randpy:py3.8
+    image: tensorflow/tensorflow:2.5.0-gpu
+    run_args: [ "--gpus all" ]
     setup:
       - type: python
         packages:
@@ -77,6 +78,6 @@ platforms:
           - anndata
           - scanpy
           - tensorflow
-          - tensorflow_probability
+          - pandas
   - type: nextflow
-    labels: [ lowmem, lowtime, lowcpu ]
+    labels: [ vhighmem, vvhightime, highcpu, gpu]
