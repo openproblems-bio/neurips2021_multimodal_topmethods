@@ -56,7 +56,17 @@ if mod1 != "ADT":
 else:
     gex_train = input_train_mod1.to_df()
 
-train_mod1, test_mod1, train_mod2, test_mod2 = train_test_split(gex_train, input_train_mod2_df, test_size=0.25, random_state=666)
+# reproduce train/test split from phase 1
+batch = input_train_mod1.obs["batch"]
+train_ix = [ k for k,v in enumerate(batch) if v not in {'s1d2', 's3d7'} ]
+test_ix = [ k for k,v in enumerate(batch) if v in {'s1d2', 's3d7'} ]
+
+train_mod1 = gex_train.iloc[train_ix, :]
+train_mod2 = input_train_mod2_df.iloc[train_ix, :]
+test_mod1 = gex_train.iloc[test_ix, :]
+test_mod2 = input_train_mod2_df.iloc[test_ix, :]
+
+# train_mod1, test_mod1, train_mod2, test_mod2 = train_test_split(gex_train, input_train_mod2_df, test_size=0.25, random_state=666)
 
 if mod1 == 'ATAC' and mod2 == 'GEX':
     dataset_train = ModalityMatchingDataset(train_mod1, train_mod2)
