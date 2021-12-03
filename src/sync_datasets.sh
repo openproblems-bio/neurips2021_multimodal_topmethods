@@ -20,3 +20,4 @@ function aws_sync {
 }
 
 aws_sync sync "s3://openproblems-bio/public/phase2-private-data/" "output/datasets"
+aws_sync sync "s3://openproblems-bio/public/explore/" "output/datasets_explore"

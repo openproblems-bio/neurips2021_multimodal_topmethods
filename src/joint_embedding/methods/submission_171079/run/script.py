@@ -1,0 +1,127 @@
+import logging
+import anndata as ad
+import numpy as np
+from sklearn.decomposition import TruncatedSVD
+from sklearn.preprocessing import normalize
+import tensorflow as tf
+import pickle as pk
+import scipy
+import sys
+
+logging.basicConfig(level=logging.INFO)
+
+## VIASH START
+dataset_path = 'sample_data/openproblems_bmmc_multiome_starter/openproblems_bmmc_multiome_starter.'
+
+par = {
+    'input_mod1': dataset_path + 'mod1.h5ad',
+    'input_mod2': dataset_path + 'mod2.h5ad',
+    'input_pretrain': '...',
+    'output': 'output.h5ad',
+}
+
+meta = { 'resources_dir': '.', 'functionality_name': 'submission_171079' }
+## VIASH END
+
+sys.path.append(meta['resources_dir'])
+from utils import JointEmbeddingModel
+
+logging.info('Reading `h5ad` files...')
+ad_mod1 = ad.read_h5ad(par['input_mod1'])
+ad_mod2 = ad.read_h5ad(par['input_mod2'])
+mod1_obs = ad_mod1.obs
+mod1_uns = ad_mod1.uns
+
+ad_mod2_var = ad_mod2.var
+
+mod1_mat = ad_mod1.layers["counts"]
+mod2_mat = ad_mod2.layers["counts"]
+
+del ad_mod2, ad_mod1
+
+if ad_mod2_var['feature_types'][0] == 'ATAC':
+    mod1_svd = pk.load(open(par['input_pretrain'] + '/svd_mod1.pkl','rb'))
+    mod2_svd = pk.load(open(par['input_pretrain'] + '/svd_mod2.pkl','rb'))
+else:
+    mod1_svd = pk.load(open(par['input_pretrain'] + '/svd_mod1.pkl','rb'))
+    mod1_svd = None
+
+def svd_transform(mod1_data, mod2_data, mod1_svd, mod2_svd, scale=1e4):
+    mod1_data = scale * normalize(mod1_data, norm='l1', axis=1)
+    mod2_data = scale * normalize(mod2_data, norm='l1', axis=1)
+    mod1_data = scipy.sparse.csr_matrix.log1p(mod1_data) / np.log(10)
+    mod2_data = scipy.sparse.csr_matrix.log1p(mod2_data) / np.log(10)
+    pca_data_mod1 = mod1_svd.transform(mod1_data)
+
+    if ad_mod2_var['feature_types'][0] == 'ADT':
+        pca_data_mod2 = mod2_data.toarray()
+    else:
+        pca_data_mod2 = mod2_svd.transform(mod2_data)
+    return pca_data_mod1, pca_data_mod2
+
+mod1_pca, mod2_pca = svd_transform(mod1_mat, mod2_mat, mod1_svd, mod2_svd)
+
+del mod1_mat, mod2_mat
+
+pca_combined = np.concatenate([mod1_pca, mod2_pca],axis=1)
+del mod1_pca, mod2_pca
+
+if ad_mod2_var['feature_types'][0] == 'ATAC':
+    nb_cell_types, nb_batches, nb_phases = 21, 5, 2
+    hidden_units = [150, 120, 100, 33]
+else:
+    nb_cell_types, nb_batches, nb_phases = 45, 6, 2
+    hidden_units = [150, 120, 100, 58]
+
+params = {
+    'dim' : pca_combined.shape[1],
+    'lr': 2e-5,
+    'hidden_units' : hidden_units,
+    'nb_layers': len(hidden_units),
+    'nb_cell_types': nb_cell_types,
+    'nb_batches': nb_batches,
+    'nb_phases': nb_phases,
+    'use_batch': True,
+    'coeff': [1.0, 0.0, 0.0, 0.0]
+}
+
+
+mymodel = JointEmbeddingModel(params)
+mymodel(np.zeros((2, params['dim'])))
+
+mymodel.compile(tf.keras.optimizers.Adam(learning_rate = params["lr"]), 
+            loss = [tf.keras.losses.MeanSquaredError(), 
+                    tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                    tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                    tf.keras.losses.MeanSquaredError()
+                    ],
+            loss_weights=params['coeff'], run_eagerly=True)
+
+#load pretrain model
+mymodel.load_weights(par['input_pretrain'] +'/weights.h5')
+
+
+X_train = pca_combined
+c_fakes = np.random.randint(low=0, high=nb_cell_types,size=pca_combined.shape[0])
+b_fakes = np.random.randint(low=0, high=nb_batches,size=pca_combined.shape[0])
+p_fakes = np.random.randint(low=0, high=nb_phases,size=pca_combined.shape[0])
+Y_train = [pca_combined, c_fakes, b_fakes, p_fakes]
+
+#finetune on the test data
+mymodel.fit(x=X_train, y=Y_train,
+            epochs = 2,
+            batch_size = 32,
+            shuffle=True)
+
+embeds = mymodel.encoder.predict(pca_combined)
+print(embeds.shape)
+
+adata = ad.AnnData(
+    X=embeds,
+    obs=mod1_obs,
+	uns={
+        'dataset_id': mod1_uns['dataset_id'],
+        'method_id': meta['functionality_name'],
+    },
+)
+adata.write_h5ad(par['output'], compression="gzip")
