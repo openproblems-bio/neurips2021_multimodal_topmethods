@@ -32,6 +32,16 @@ functionality:
       example: "dataset_mod2.h5ad"
       description: Censored dataset.
       required: true
+    - name: "--input_explore_mod1"
+      type: "file"
+      example: "dataset_mod1.h5ad"
+      description: Explore version of the modality 1 dataset.
+      required: true
+    - name: "--input_explore_mod2"
+      type: "file"
+      example: "dataset_mod2.h5ad"
+      description: Explore version of the modality 2 dataset.
+      required: true
 
     # required outputs
     - name: "--output_pretrain"
@@ -45,6 +55,7 @@ functionality:
   resources:
     - type: python_script
       path: script.py
+    - path: ADT_list_df_updated.csv
       
 # target platforms
 platforms:
