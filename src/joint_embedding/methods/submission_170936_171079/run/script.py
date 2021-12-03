@@ -34,12 +34,14 @@ mod1_uns = ad_mod1.uns
 
 ad_mod2_var = ad_mod2.var
 
+mod_type = ad_mod2_var['feature_types'][0]
+
 mod1_mat = ad_mod1.layers["counts"]
 mod2_mat = ad_mod2.layers["counts"]
 
 del ad_mod2, ad_mod1
 
-if ad_mod2_var['feature_types'][0] == 'ATAC':
+if mod_type == 'ATAC':
     mod1_svd = pk.load(open(par['input_pretrain'] + '/svd_mod1.pkl','rb'))
     mod2_svd = pk.load(open(par['input_pretrain'] + '/svd_mod2.pkl','rb'))
 else:
@@ -53,7 +55,7 @@ def svd_transform(mod1_data, mod2_data, mod1_svd, mod2_svd, scale=1e4):
     mod2_data = scipy.sparse.csr_matrix.log1p(mod2_data) / np.log(10)
     pca_data_mod1 = mod1_svd.transform(mod1_data)
 
-    if ad_mod2_var['feature_types'][0] == 'ADT':
+    if mod_type == 'ADT':
         pca_data_mod2 = mod2_data.toarray()
     else:
         pca_data_mod2 = mod2_svd.transform(mod2_data)
@@ -66,16 +68,20 @@ del mod1_mat, mod2_mat
 pca_combined = np.concatenate([mod1_pca, mod2_pca],axis=1)
 del mod1_pca, mod2_pca
 
-if ad_mod2_var['feature_types'][0] == 'ATAC':
+if mod_type == 'ATAC':
     nb_cell_types, nb_batches, nb_phases = 21, 5, 2
     hidden_units = [150, 120, 100, 33]
+    lr_par = 2e-5
+    epochs = 2
 else:
     nb_cell_types, nb_batches, nb_phases = 45, 6, 2
     hidden_units = [150, 120, 100, 58]
+    lr_par = 1e-4
+    epochs = 1
 
 params = {
     'dim' : pca_combined.shape[1],
-    'lr': 2e-5,
+    'lr': lr_par,
     'hidden_units' : hidden_units,
     'nb_layers': len(hidden_units),
     'nb_cell_types': nb_cell_types,
@@ -109,7 +115,7 @@ Y_train = [pca_combined, c_fakes, b_fakes, p_fakes]
 
 #finetune on the test data
 mymodel.fit(x=X_train, y=Y_train,
-            epochs = 2,
+            epochs = epochs,
             batch_size = 32,
             shuffle=True)
 

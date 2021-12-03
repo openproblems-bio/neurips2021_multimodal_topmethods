@@ -1,5 +1,5 @@
 functionality:
-  name: submission_171079_train
+  name: submission_170936_171079_run
   namespace: joint_embedding_methods
 
   # metadata for your method
@@ -23,31 +23,17 @@ functionality:
       example: "dataset_mod2.h5ad"
       description: Modality 2 dataset.
       required: true
-    - name: "--input_explore_mod1"
+    - name: "--input_pretrain"
       type: "file"
-      example: "dataset_mod1.h5ad"
-      description: Explore version of the modality 1 dataset.
-      required: true
-    - name: "--input_explore_mod2"
-      type: "file"
-      example: "dataset_mod2.h5ad"
-      description: Explore version of the modality 2 dataset.
-      required: true
-    - name: "--tf_seed"
-      type: "integer"
-      default: 46
-      description: ...
-    - name: "--np_seed"
-      type: "integer"
-      default: 56
-      description: ...
-    
-    # required outputs
-    - name: "--output_pretrain"
-      type: "file"
-      direction: "output"
       example: "pretrain_model"
       description: Path to the directory containing a pretrained model.
+      required: true
+    # required outputs
+    - name: "--output"
+      type: "file"
+      direction: "output"
+      example: "output.h5ad"
+      description: Data for all cells in mod1 and mod2 embedded to ≤100 dimensions.
       required: true
 
   # files your script needs
