@@ -1,12 +1,11 @@
+import sys
 import logging
 import anndata as ad
 import numpy as np
-from sklearn.decomposition import TruncatedSVD
 from sklearn.preprocessing import normalize
 import tensorflow as tf
 import pickle as pk
 import scipy
-import sys
 
 logging.basicConfig(level=logging.INFO)
 
