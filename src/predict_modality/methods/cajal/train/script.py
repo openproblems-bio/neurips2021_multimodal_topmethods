@@ -106,7 +106,7 @@ elif mod_1 == "GEX" and mod_2 == "ADT":
     genes1.to_csv(par['output_pretrain'] + '/DEGs.csv')
     genes2 = pd.read_csv(meta["resources_dir"] + "/ADT_list_df_updated.csv")
     selected_genes = set(genes1.names.append(genes2.gene_name))
-    hp = Hyperparameters(0.2, [170, 300, 480, 330, 770])
+    hp = Hyperparameters(0.4, [170, 80, 340])
     epochs = 35
 
 elif mod_1 == "ATAC" and mod_2 == "GEX":
