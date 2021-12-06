@@ -118,7 +118,7 @@ elif mod_1 == "ATAC" and mod_2 == "GEX":
 
 elif mod_1 == "ADT" and mod_2 == "GEX":
     selected_genes = set(input_train_mod1.var_names)
-    hp = Hyperparameters(0.2, [180, 140, 520])
+    hp = Hyperparameters(0.2, [170, 300, 480, 330, 770])
     epochs = 78
 
 #### build and train models given hyperparameters, 
