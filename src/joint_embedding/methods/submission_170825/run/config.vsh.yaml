@@ -28,6 +28,7 @@ functionality:
     - name: Minxing Pang
       email: minxing.pang@kaust.edu.sa 
       roles: [ author, maintainer ]
+
   # parameters
   arguments:
     # required inputs
