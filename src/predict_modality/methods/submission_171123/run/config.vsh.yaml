@@ -5,6 +5,7 @@ functionality:
   # metadata for your method
   description: A description for your method.
   info:
+    method_label: "method name"
     submission_id: "171123"
     team_name: LS_lab
     # project_url: https://github.com/foo/bar

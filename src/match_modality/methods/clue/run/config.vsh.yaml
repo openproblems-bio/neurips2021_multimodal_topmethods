@@ -6,6 +6,7 @@ functionality:
   
   description: Cross-linked unified embedding for single-cell multi-omics data integration
   info:
+    method_label: "GLUE"
     submission_id: "169959"
     team_name: GLUE
     project_url: https://github.com/gao-lab/GLUE

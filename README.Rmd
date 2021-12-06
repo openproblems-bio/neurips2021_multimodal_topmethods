@@ -95,6 +95,7 @@ comp_df <- map_df(seq_along(comp_yamls), function(i) {
     conf = ya$info$config,
     name = ya$functionality$name,
     namespace = ya$functionality$namespace %||% "",
+    method_label = ya$functionality$info$method_label %||% "",
     submission_id = ya$functionality$info$submission_id %||% "",
     team_name = ya$functionality$info$team_name %||% "",
     project_url = ya$functionality$info$project_url %||% "",
@@ -115,7 +116,7 @@ comp_df %>%
   transmute(
     Task = gsub("_methods", "", namespace),
     Team = team_name,
-    `Method name` = glue::glue("[{name}]({conf})"),
+    `Method name` = glue::glue("[{method_label}]({conf})"),
     Authors = authors_text
   ) %>% 
   knitr::kable()
