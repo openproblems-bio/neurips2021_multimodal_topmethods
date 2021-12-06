@@ -1,10 +1,16 @@
 functionality:
-  name: cajal_run
+  name: cajal
   namespace: predict_modality_methods
   
   # metadata for your method
-  version: dev
   description: A description for your method.
+  info:
+    submission_id: "170613"
+    team_name: Cajal
+    # project_url: https://github.com/foo/bar
+    # publication_doi: 10.1101/0123.45.67.890123
+    # publication_url: https://arxiv.org/abs/1234.56789
+
   authors:
     - name: Anna Laddach
       email: anna.laddach@crick.ac.uk
@@ -50,16 +56,6 @@ functionality:
       example: "output.h5ad"
       description: Dataset with predicted values for modality2.
       required: true
-      
-    # additional parameters
-    - name: "--distance_method"
-      type: "string"
-      default: "minkowski"
-      description: The distance metric to use. Possible values include `euclidean` and `minkowski`.
-    - name: "--n_pcs"
-      type: "integer"
-      default: 50
-      description: Number of components to use for dimensionality reduction.
       
   # files your script needs
   resources:

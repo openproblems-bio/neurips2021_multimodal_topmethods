@@ -1,10 +1,16 @@
 functionality:
-  name: submission_171129_run
+  name: submission_171129
   namespace: predict_modality_methods
   
   # metadata for your method
-  version: dev
   description: A description for your method.
+  info:
+    submission_id: "171129"
+    team_name: DSE
+    # project_url: https://github.com/foo/bar
+    # publication_doi: 10.1101/0123.45.67.890123
+    # publication_url: https://arxiv.org/abs/1234.56789
+
   authors:
     - name: Hongzhi Wen
       email: wenhongz@msu.edu

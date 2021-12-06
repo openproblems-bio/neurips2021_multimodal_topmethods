@@ -19,7 +19,7 @@ par = {
     'input_explore_mod2': 'output/datasets_explore/cite/cite_gex_processed_training.h5ad',
     'output_pretrain': 'path/to/model'
 }
-meta = { 'functionality_name': 'cajal_run', 'resources_dir': 'src/predict_modality/methods/cajal/train' }
+meta = { 'functionality_name': 'cajal', 'resources_dir': 'src/predict_modality/methods/cajal/train' }
 ## VIASH END
 
 input_train_mod1 = ad.read_h5ad(par['input_train_mod1'])

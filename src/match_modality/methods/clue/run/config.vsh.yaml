@@ -1,10 +1,17 @@
 functionality:
-  name: clue_run
+  name: clue
   namespace: match_modality_methods
 
   # metadata for your method
-  version: dev
+  
   description: Cross-linked unified embedding for single-cell multi-omics data integration
+  info:
+    submission_id: "169959"
+    team_name: GLUE
+    project_url: https://github.com/gao-lab/GLUE
+    publication_doi: 10.1101/2021.08.22.457275
+    # publication_url: https://arxiv.org/abs/1234.56789
+
   authors:
     - name: Zhi-Jie Cao
       email: caozj@mail.cbi.pku.edu.cn

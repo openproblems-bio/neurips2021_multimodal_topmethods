@@ -3,7 +3,7 @@ functionality:
   namespace: predict_modality_methods
   
   # metadata for your method
-  version: dev
+  
   description: A description for your method.
   authors:
     - name: Hongzhi Wen

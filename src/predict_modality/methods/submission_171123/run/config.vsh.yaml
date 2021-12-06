@@ -1,10 +1,16 @@
 functionality:
-  name: submission_171123_run
+  name: submission_171123
   namespace: predict_modality_methods
   
   # metadata for your method
-  version: dev
   description: A description for your method.
+  info:
+    submission_id: "171123"
+    team_name: LS_lab
+    # project_url: https://github.com/foo/bar
+    # publication_doi: 10.1101/0123.45.67.890123
+    # publication_url: https://arxiv.org/abs/1234.56789
+
   authors:
     - name: John Doe
       email: johndoe@youremailprovider.com

@@ -1,9 +1,16 @@
 functionality:
-  name: submission_170825_run
+  name: submission_170825
   namespace: joint_embedding_methods
 
   # metadata for your method
   description: A description for your method.
+  info:
+    submission_id: "170825"
+    team_name: Living-Systems-Lab
+    # project_url: https://github.com/foo/bar
+    # publication_doi: 10.1101/0123.45.67.890123
+    # publication_url: https://arxiv.org/abs/1234.56789
+
   authors:
     - name: John Doe
       email: johndoe@youremailprovider.com

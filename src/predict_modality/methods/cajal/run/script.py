@@ -5,9 +5,6 @@ import numpy as np
 
 from scipy.sparse import csc_matrix
 
-from sklearn.decomposition import TruncatedSVD
-from sklearn.linear_model import LinearRegression
-
 import tensorflow as tf
 import scanpy as sc
 
@@ -21,7 +18,7 @@ par = {
     'input_pretrain': 'path/to/model',
     'output': 'output.h5ad'
 }
-meta = { 'functionality_name': 'cajal_run' }
+meta = { 'functionality_name': 'cajal' }
 ## VIASH END
 
 logging.info('Reading `h5ad` files...')
