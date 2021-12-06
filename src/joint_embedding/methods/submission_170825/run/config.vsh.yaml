@@ -13,10 +13,23 @@ functionality:
     # publication_url: https://arxiv.org/abs/1234.56789
 
   authors:
-    - name: John Doe
-      email: johndoe@youremailprovider.com
+    - name: Sumeer Khan
+      email: sumeer.khan@kaust.edu.sa
       roles: [ author, maintainer ]
-      props: { github: johndoe, orcid: "0000-1111-2222-3333" }
+    - name: Robert Lehman
+      email: robert.lehman@kaust.edu.sa 
+      roles: [ author, maintainer ]
+    - name: Xabier Martinez De Morentin
+      email: xavier.martinez.demorentin@navarra.es 
+      roles: [ author, maintainer ]
+    - name: Aidyn Ubingazhibov
+      email: aidyn.ubingazhibov@nu.edu.kz
+      roles: [ author, maintainer ]
+    - name: Minxing Pang
+      email: minxing.pang@kaust.edu.sa 
+      roles: [ author, maintainer ]
+      
+      
 
   # parameters
   arguments:
