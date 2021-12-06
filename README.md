@@ -5,7 +5,7 @@
 
 This repository is a collection of top methods submitted to the
 OpenProblems / NeurIPS 2021 competition for multimodal single-cell data
-integration ([link](https://openproblems.bio/neurips_2021/).
+integration ([link](https://openproblems.bio/neurips_2021/)).
 
 Through the pipelines and code contained in this repository, you should
 be able to replicate the obtained scores for each of the top
