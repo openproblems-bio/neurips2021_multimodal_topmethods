@@ -3,14 +3,14 @@ functionality:
   namespace: match_modality_methods
 
   # metadata for your method
-  
+
   description: Cross-linked unified embedding for single-cell multi-omics data integration
   info:
-    method_label: "GLUE"
+    method_label: "CLUE"
     submission_id: "169959"
     team_name: GLUE
     project_url: https://github.com/gao-lab/GLUE
-    publication_doi: 10.1101/2021.08.22.457275
+    # publication_doi: 10.1101/2021.08.22.457275
     # publication_url: https://arxiv.org/abs/1234.56789
 
   authors:
