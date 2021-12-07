@@ -5,7 +5,7 @@ functionality:
   # metadata for your method
   description: A description for your method.
   info:
-    method_label: "method name"
+    method_label: "LSL_AE"
     submission_id: "170825"
     team_name: Living-Systems-Lab
     # project_url: https://github.com/foo/bar
