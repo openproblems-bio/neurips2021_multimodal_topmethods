@@ -116,7 +116,7 @@ comp_df %>%
   transmute(
     Task = gsub("_methods", "", namespace),
     Team = team_name,
-    `Method name` = glue::glue("[{method_label}]({conf})"),
+    Method = glue::glue("[{method_label}]({conf})"),
     Authors = authors_text
   ) %>% 
   knitr::kable()
