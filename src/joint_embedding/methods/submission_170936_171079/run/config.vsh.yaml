@@ -8,9 +8,7 @@ functionality:
     method_label: "JAE"
     submission_id: "170936/171079"
     team_name: Amateur
-    # project_url: https://github.com/foo/bar
-    # publication_doi: 10.1101/0123.45.67.890123
-    # publication_url: https://arxiv.org/abs/1234.56789
+    project_url: https://github.com/kimmo1019/JAE
 
   authors:
     - name: Qiao Liu 
