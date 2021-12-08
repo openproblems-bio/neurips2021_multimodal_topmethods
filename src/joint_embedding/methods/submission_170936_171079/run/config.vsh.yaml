@@ -3,20 +3,25 @@ functionality:
   namespace: joint_embedding_methods
 
   # metadata for your method
-  description: A description for your method.
+  description: In brief, we built an autoencoder for joint embedding (JAE). Each modality will first be SVD transformed and concatenated together. The major difference from standard AE is that we incorporated the information from cell annotations (e.g., cell label, cell cycle score, and cell batch) to constrain the structure of latent features. We desire that some latent features predict the cell type information, some features predict the cell cycle score. Noticeably, for feature corresponding to batch effect, we want it to predict the batch label as randomly as possible to potentially eliminate the batch effect. There are also several nodes that have no constrain at all to ensure the flexibility of neural network.
   info:
-    method_label: "method name"
+    method_label: "JAE"
     submission_id: "170936/171079"
     team_name: Amateur
-    # project_url: https://github.com/foo/bar
-    # publication_doi: 10.1101/0123.45.67.890123
-    # publication_url: https://arxiv.org/abs/1234.56789
+    project_url: https://github.com/kimmo1019/JAE
 
   authors:
-    - name: John Doe
-      email: johndoe@youremailprovider.com
+    - name: Qiao Liu 
+      email: liuqiao@stanford.edu
       roles: [ author, maintainer ]
-      props: { github: johndoe, orcid: "0000-1111-2222-3333" }
+      props: { github: kimmo1019, orcid: "0000-0002-9781-3360", url: "http://liuqiao.me" }
+    - name: Wanwen Zeng
+      email: wanwen@stanford.edu
+      roles: author
+      props: { github: wanwenzeng, orcid: "0000-0003-3426-0890", url: "https://scholar.google.com/citations?user=MbeOhkgAAAAJ&hl=zh-CN" }
+    - name: Chencheng Xu
+      roles: author
+      props: { github: Zoesgithub, orcid: "0000-0002-2262-6966" }
 
   # parameters
   arguments:
