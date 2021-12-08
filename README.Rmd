@@ -17,54 +17,6 @@ This repository is a collection of top methods submitted to the OpenProblems / N
 
 Through the pipelines and code contained in this repository, you should be able to replicate the obtained scores for each of the top submissions.
 
-## Dependencies
-
-The dependencies of this repository are the same as those of the competition itself ([link](https://openproblems.bio/neurips_docs/submission/quickstart/#2-configure-your-local-environment)).
-
-To run any of the methods, you need to download the required binaries and datasets and build the relevant docker containers first.
-```
-# download viash and nextflow
-bin/init
-
-# sync datasets to local
-src/sync_datasets.sh
-
-# build components and docker containers
-bin/viash_build --max_threads 4
-```
-
-You can then rerun components by running the bash script located in the respective folders.
-
-For example:
-
-```bash
-$ src/predict_modality/methods/cajal/test.sh
-
-...
-
-N E X T F L O W  ~  version 21.04.1
-Pulling openproblems-bio/neurips2021_multimodal_viash ...
-Launching `openproblems-bio/neurips2021_multimodal_viash` [trusting_woese] - revision: a28e0c22c5 [1.4.0]
-executor >  local (5)
-[4e/f4b91d] process > get_id_predictions (4)                                                            [100%] 4 of 4, cached: 3 ✔
-[94/ffca9e] process > get_id_solutions (2)                                                              [100%] 4 of 4, cached: 4 ✔
-[b3/92d144] process > bind_tsv_rows:bind_tsv_rows_process (meta_metric)                                 [100%] 1 of 1, cached: 1 ✔
-[44/667c85] process > mse:mse_process (openproblems_bmmc_cite_phase2_PM_gex2adt)                        [100%] 4 of 4, cached: 3 ✔
-[4f/8061cc] process > correlation:correlation_process (openproblems_bmmc_cite_phase2_PM_gex2adt)        [100%] 4 of 4, cached: 3 ✔
-[ea/988a0f] process > check_format:check_format_process (openproblems_bmmc_cite_phase2_PM_gex2adt)      [100%] 4 of 4, cached: 3 ✔
-[dc/393dca] process > final_scores:final_scores_process (output)                                        [100%] 1 of 1 ✔
-
-[{"method_id":"cajal","ADT2GEX":0.3273,"ATAC2GEX":0.2172,"GEX2ADT":0.4613,"GEX2ATAC":0.178,"Overall":0.2959}]
-```
-
-After the bash script has finished running, output will have been stored in:
-
-* `output/pretrain/<task-id>/<method-id>/<dataset-id>.output_pretrain`: Pre-trained models (if required).
-* `output/predictions/<task-id>/<method-id>/<dataset-id>`: Predictions made by the method.
-* `output/evaluation<method-id>/<dataset-id>`: Evaluation metrics.
-
-Where <task-id> is one of three competition tasks (`predict_modality`, `match_modality` or `joint_embedding`).
-
 ### List of methods
 
 ```{r readyaml, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE, results='asis'}
@@ -122,3 +74,52 @@ comp_df %>%
   ) %>% 
   knitr::kable()
 ```
+
+
+## Dependencies
+
+The dependencies of this repository are the same as those of the competition itself ([link](https://openproblems.bio/neurips_docs/submission/quickstart/#2-configure-your-local-environment)).
+
+To run any of the methods, you need to download the required binaries and datasets and build the relevant docker containers first.
+```
+# download viash and nextflow
+bin/init
+
+# sync datasets to local
+src/sync_datasets.sh
+
+# build components and docker containers
+bin/viash_build --max_threads 4
+```
+
+You can then rerun components by running the bash script located in the respective folders.
+
+For example:
+
+```bash
+$ src/predict_modality/methods/cajal/test.sh
+
+...
+
+N E X T F L O W  ~  version 21.04.1
+Pulling openproblems-bio/neurips2021_multimodal_viash ...
+Launching `openproblems-bio/neurips2021_multimodal_viash` [trusting_woese] - revision: a28e0c22c5 [1.4.0]
+executor >  local (5)
+[4e/f4b91d] process > get_id_predictions (4)                                                            [100%] 4 of 4, cached: 3 ✔
+[94/ffca9e] process > get_id_solutions (2)                                                              [100%] 4 of 4, cached: 4 ✔
+[b3/92d144] process > bind_tsv_rows:bind_tsv_rows_process (meta_metric)                                 [100%] 1 of 1, cached: 1 ✔
+[44/667c85] process > mse:mse_process (openproblems_bmmc_cite_phase2_PM_gex2adt)                        [100%] 4 of 4, cached: 3 ✔
+[4f/8061cc] process > correlation:correlation_process (openproblems_bmmc_cite_phase2_PM_gex2adt)        [100%] 4 of 4, cached: 3 ✔
+[ea/988a0f] process > check_format:check_format_process (openproblems_bmmc_cite_phase2_PM_gex2adt)      [100%] 4 of 4, cached: 3 ✔
+[dc/393dca] process > final_scores:final_scores_process (output)                                        [100%] 1 of 1 ✔
+
+[{"method_id":"cajal","ADT2GEX":0.3273,"ATAC2GEX":0.2172,"GEX2ADT":0.4613,"GEX2ATAC":0.178,"Overall":0.2959}]
+```
+
+After the bash script has finished running, output will have been stored in:
+
+* `output/pretrain/<task-id>/<method-id>/<dataset-id>.output_pretrain`: Pre-trained models (if required).
+* `output/predictions/<task-id>/<method-id>/<dataset-id>`: Predictions made by the method.
+* `output/evaluation<method-id>/<dataset-id>`: Evaluation metrics.
+
+Where <task-id> is one of three competition tasks (`predict_modality`, `match_modality` or `joint_embedding`).
