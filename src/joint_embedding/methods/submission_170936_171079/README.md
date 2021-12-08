@@ -3,4 +3,4 @@
 Team: Amateur
 Team members: Qiao Liu, Wanwen Zeng, Chencheng Xu
 
-<img src="model_architecture.png" width="50%">
+<img src="model_architecture.png">
