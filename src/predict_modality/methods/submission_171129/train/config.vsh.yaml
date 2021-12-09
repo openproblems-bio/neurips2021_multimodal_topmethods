@@ -55,8 +55,11 @@ functionality:
       
   # files your script needs
   resources:
-    - type: python_script
-      path: script.py
+    - type: bash_script
+      path: script.sh
+    - path: hetero_arg_version_v5.py
+    - path: h.all.v7.4.entrez.gmt
+    - path: h.all.v7.4.symbols.gmt
       
 # target platforms
 platforms:

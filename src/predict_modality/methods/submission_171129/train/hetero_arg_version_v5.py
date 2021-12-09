@@ -7,12 +7,7 @@ import json
 import re
 import argparse
 import pickle
-from sklearn.decomposition import TruncatedSVD
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-
 import anndata as ad
-import matplotlib.pyplot as plt
 
 import torch
 import torch.nn.functional as F
@@ -26,22 +21,6 @@ from dgl.heterograph import DGLBlock
 from dgl import function as fn
 from dgl.transform import reverse
 import dgl.nn as dglnn
-
-
-## VIASH START
-dataset_path = "output/datasets/match_modality/openproblems_bmmc_cite_phase2_rna/openproblems_bmmc_cite_phase2_rna.censor_dataset.output_"
-pretrain_path = "output/pretrain/match_modality/clue/openproblems_bmmc_cite_phase2_rna.clue_train.output_pretrain/"
-
-par = {
-    'input_train_mod1': f'{dataset_path}train_mod1.h5ad',
-    'input_train_mod2': f'{dataset_path}train_mod2.h5ad',
-    'output_pretrain': pretrain_path
-}
-meta = {
-    'resources_dir': '.',
-    'functionality_name': '171129'
-}
-## VIASH END
 
 
 parser = argparse.ArgumentParser()
@@ -84,7 +63,7 @@ parser.add_argument('-ov', '--overlap', action = 'store_true')
 parser.add_argument('-or', '--output_relu', default = 'none', choices = ['relu', 'leaky_relu', 'none'])
 parser.add_argument('-i', '--inductive', default = 'trans', choices = ['normal', 'opt', 'trans'])
 parser.add_argument('-sa', '--subpath_activation', action = 'store_true')
-parser.add_argument('-ci', '--cell_init', default = 'none', choices=['none', 'pca', 'ae'])
+parser.add_argument('-ci', '--cell_init', default = 'none', choices=['none', 'ae'])
 parser.add_argument('-bas', '--batch_seperation', action = 'store_true')
 
 args = parser.parse_args()
@@ -364,11 +343,6 @@ else:
 # Graph construction
 if args.cell_init == 'none':
     cell_ids = torch.ones(CELL_SIZE).long()
-elif args.cell_init == 'pca':
-    embedder_mod1 = TruncatedSVD(n_components=100)
-    X_train_np = embedder_mod1.fit_transform(input_train_mod1.toarray())
-    X_test_np = embedder_mod1.transform(input_test_mod1.toarray())
-    cell_ids = torch.cat([torch.from_numpy(X_train_np), torch.from_numpy(X_test_np)], 0).float()
 else:
     model = AutoEncoder2En1De(FEATURE_SIZE, OUTPUT_SIZE, 100)
     model.load_state_dict(torch.load(f'ensemble_models/{subtask}_auto_encoder_model.pth', map_location='cpu'))
@@ -794,11 +768,11 @@ for epoch in range(args.epoch):
     if True: #epoch % 5 == 4:
         val.append(validate(model))
         
-    if epoch>2000 and val[-1]<minval:
+    if epoch>4000 and val[-1]<minval:
         minval = val[-1]
         minvep = epoch
         if args.save_best:
-            torch.save(model.state_dict(), f'{args.model_folder}/{PREFIX}.best.pth')
+            torch.save(model, f'{args.model_folder}/{PREFIX}.pkl')
     
     if args.early_stopping > 0 and min(val[-args.early_stopping:]) > minval:
         logger.write('Early stopped.\n')
