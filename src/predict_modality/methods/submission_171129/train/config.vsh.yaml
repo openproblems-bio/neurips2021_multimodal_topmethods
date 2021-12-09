@@ -59,7 +59,8 @@ functionality:
 # target platforms
 platforms:
   - type: docker
-    image: dataintuitive/randpy:py3.8
+    image: pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime
+    run_args: [ "--gpus all" ]
     setup:
       - type: docker
         run: [pip install scikit-learn==0.24.1]
@@ -76,4 +77,4 @@ platforms:
           - joblib
 
   - type: nextflow
-    labels: [ midmem, hightime, lowcpu ]
+    labels: [ midmem, hightime, lowcpu, gpu ]
