@@ -34,15 +34,9 @@ functionality:
   # parameters
   arguments:
     # required inputs
-    - name: "--input_train_mod1"
+    - name: "--data_dir"
       type: "file"
-      example: "dataset_mod1.h5ad"
-      description: Censored dataset, training cells.
-      required: true
-    - name: "--input_train_mod2"
-      type: "file"
-      example: "dataset_mod2.h5ad"
-      description: Censored dataset.
+      description: The path to the predict_modality datasets
       required: true
 
     # required outputs
@@ -50,7 +44,7 @@ functionality:
       type: "file"
       direction: "output"
       example: "pretrain_model"
-      description: Path to the directory containing a pretrained model.
+      description: Path to the directory containing the pretrained models.
       required: true
       
   # files your script needs
@@ -58,6 +52,7 @@ functionality:
     - type: bash_script
       path: script.sh
     - path: hetero_arg_version_v5.py
+    - path: generate_extra_files.py
     - path: h.all.v7.4.entrez.gmt
     - path: h.all.v7.4.symbols.gmt
       

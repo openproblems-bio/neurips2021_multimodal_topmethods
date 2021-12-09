@@ -6,16 +6,17 @@ export PIPELINE_VERSION=1.4.0
 method_id=submission_171129
 task_id=predict_modality
 
+# GENERATE PRETRAIN
+pretrain_path=output/pretrain/$task_id/$method_id/pretrain.${method_id}_train.output_pretrain/
+
+target/docker/${task_id}_methods/train/${method_id}_train \
+  --data_dir output/datasets/$task_id \
+  --output_pretrain ${pretrain_path}
+
 # CITE GEX2ADT
 dataset_id=openproblems_bmmc_cite_phase2_rna
 dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
-pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
-
-target/docker/${task_id}_methods/train/${method_id}_train \
-  --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
-  --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
-  --output_pretrain ${pretrain_path}
 
 target/docker/${task_id}_methods/run/${method_id} \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
@@ -27,14 +28,7 @@ target/docker/${task_id}_methods/run/${method_id} \
 # CITE ADT2GEX
 dataset_id=openproblems_bmmc_cite_phase2_mod2
 dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
-# reuse same pretrain dir
-# pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
-
-# target/docker/${task_id}_methods/train/${method_id}_train \
-#   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
-#   --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
-#   --output_pretrain ${pretrain_path}
 
 target/docker/${task_id}_methods/run/${method_id} \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
@@ -65,14 +59,7 @@ target/docker/${task_id}_methods/run/${method_id} \
 # MULTIOME ATAC2GEX
 dataset_id=openproblems_bmmc_multiome_phase2_mod2
 dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
-# reuse same pretrain path
-# pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
-
-# target/docker/${task_id}_methods/train/${method_id}_train \
-#   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
-#   --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
-#   --output_pretrain ${pretrain_path}
 
 target/docker/${task_id}_methods/run/${method_id} \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
