@@ -25,7 +25,7 @@ parser.add_argument('-d', '--data_folder', default = './data/public/phase2-data/
 parser.add_argument('-pww', '--pathway_weight', default = 'cos', choices = ['cos', 'one', 'pearson'])
 parser.add_argument('-pwth', '--pathway_threshold', type=float, default = 0.0)
 parser.add_argument('-l', '--log_folder', default = './logs')
-parser.add_argument('-ad', '--additional_resources_folder', default = './')
+parser.add_argument('-ef', '--extra_files_folder', default = './')
 parser.add_argument('-m', '--model_folder', default = './models')
 parser.add_argument('-r', '--result_folder', default = './results')
 parser.add_argument('-e', '--epoch', type=int, default = 1500)
@@ -76,9 +76,9 @@ train_mod1 = ad.read_h5ad(subtask_filename.format('train_mod1'))
 train_mod2 = ad.read_h5ad(subtask_filename.format('train_mod2'))
 
 if args.batch_seperation:
-    mask = pickle.load(open(args.additional_resources_folder + '/phase2_mask_sep.pkl', 'rb'))[subtask]
+    mask = pickle.load(open(args.extra_files_folder + '/phase2_mask_sep.pkl', 'rb'))[subtask]
 else:
-    mask = pickle.load(open(args.additional_resources_folder + '/phase2_mask.pkl', 'rb'))[subtask]
+    mask = pickle.load(open(args.extra_files_folder + '/phase2_mask.pkl', 'rb'))[subtask]
 
 # This will get passed to the method
 input_train_mod1 = train_mod1.X[mask['train']]
@@ -215,13 +215,13 @@ ee=[]
 if npw:
     pass
 elif pww == 'cos' and subtask == 'openproblems_bmmc_cite_phase2_rna':
-    uu, vv, ee = pickle.load(open(args.additional_resources_folder + '/pw.pkl', 'rb'))
+    uu, vv, ee = pickle.load(open(args.extra_files_folder + '/pw.pkl', 'rb'))
     ee = [e.item() for e in ee]
 elif pww == 'cos' and subtask == 'openproblems_bmmc_multiome_phase2_rna':
-    uu, vv, ee = pickle.load(open(args.additional_resources_folder + '/pw_multiome.pkl', 'rb'))
+    uu, vv, ee = pickle.load(open(args.extra_files_folder + '/pw_multiome.pkl', 'rb'))
     ee = [e.item() for e in ee]
 else:
-    with open(args.additional_resources_folder + '/h.all.v7.4.entrez.gmt') as gmt:
+    with open(args.extra_files_folder + '/h.all.v7.4.entrez.gmt') as gmt:
         gene_list = gmt.read().split()
 
     gene_sets_entrez = defaultdict(list)
@@ -236,7 +236,7 @@ else:
         else:
             gene_sets_entrez[gene_set_name].append(ele)
 
-    with open(args.additional_resources_folder + '/h.all.v7.4.symbols.gmt') as gmt:
+    with open(args.extra_files_folder + '/h.all.v7.4.symbols.gmt') as gmt:
         gene_list = gmt.read().split()
 
     gene_sets_symbols = defaultdict(list)
