@@ -73,6 +73,7 @@ platforms:
           - numpy
           - torch
           - dgl
+          - dgl-cu111
           - lightgbm
           - joblib
 
