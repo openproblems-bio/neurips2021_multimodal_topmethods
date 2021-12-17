@@ -17,7 +17,7 @@ dataset_path = 'output/datasets/joint_embedding/openproblems_bmmc_cite_phase2/op
 par = {
     'input_mod1': f'{dataset_path}mod1.h5ad',
     'input_mod2': f'{dataset_path}mod2.h5ad',
-    'input_explore_mod1': 'output/datasets_explore/cite/cite_rna_processed_training.h5ad',
+    'input_explore_mod1': 'output/datasets_explore/cite/cite_gex_processed_training.h5ad',
     'input_explore_mod2': 'output/datasets_explore/cite/cite_adt_processed_training.h5ad',
     'output_pretrain': '...',
     'tf_seed': 46,
@@ -55,7 +55,7 @@ if mod1 != "ADT":
     mod1_reducer.fit(mod1_data)
     pca_data_mod1 = mod1_reducer.transform(mod1_data)
     #print('multiome 1 done',pca_data_mod1.shape)
-    pk.dump(mod1_reducer, open(par['output_pretrain'] + "svd_mod1.pkl","wb"))
+    pk.dump(mod1_reducer, open(par['output_pretrain'] + "/svd_mod1.pkl","wb"))
 
     del mod1_data, pca_data_mod1
 
@@ -67,7 +67,7 @@ if mod2 != "ADT":
     mod2_reducer.fit(mod2_data)
     pca_data_mod2 = mod2_reducer.transform(mod2_data)
     #print('multiome 2 done',pca_data_mod2.shape)
-    pk.dump(mod2_reducer, open(par['output_pretrain'] + "svd_mod2.pkl","wb"))
+    pk.dump(mod2_reducer, open(par['output_pretrain'] + "/svd_mod2.pkl","wb"))
 
     del mod2_data, pca_data_mod2
 
@@ -95,6 +95,7 @@ tf.random.set_seed(tf_seed)
 
 ad_mod1 = ad.read_h5ad(par['input_explore_mod1'])
 ad_mod2 = ad.read_h5ad(par['input_explore_mod2'])
+print(ad_mod1.shape, ad_mod2.shape)
 mod1_obs = ad_mod1.obs
 mod1_uns = ad_mod1.uns
 
@@ -129,6 +130,8 @@ cell_cycle_genes = [
 print(mod1_mat.shape, mod2_mat.shape)
 
 def preprocess(mod1_data, mod2_data, scale=1e4):
+    # n_components_mod1, n_components_mod2, mod1_reducer and mod2_reducer 
+    # are still in memory from before
 
     mod1_data = scale * normalize(mod1_data,norm='l1', axis=1)
     mod2_data = scale * normalize(mod2_data,norm='l1', axis=1)
