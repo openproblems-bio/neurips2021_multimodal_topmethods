@@ -21,6 +21,7 @@ REPO_ROOT=$(git rev-parse --show-toplevel)
 cd "$REPO_ROOT"
 
 curl -fsSL get.viash.io | bash -s -- \
+  --viash bin/viash \
   --registry openproblems \
   --tag 0.5.5 \
   --log check_results/results.tsv \
