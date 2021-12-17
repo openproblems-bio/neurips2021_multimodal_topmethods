@@ -22,7 +22,7 @@ cd "$REPO_ROOT"
 
 curl -fsSL get.viash.io | bash -s -- \
   --registry openproblems \
-  --tag 0.5.3 \
+  --tag 0.5.5 \
   --log check_results/results.tsv \
   --config_mod '.platforms[.type == "nextflow"].separate_multiple_outputs := false' \
   --config_mod '.platforms[.type == "nextflow"].directive_memory := "10GB"' \
