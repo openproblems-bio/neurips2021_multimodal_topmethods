@@ -5,7 +5,8 @@ functionality:
   # metadata for your method
   
   description: A description for your method.
-    authors:
+  
+  authors:
     - name: Gleb Ryazantsev
       email: ryazantsev.gleb@gmail.com
       roles: [ author, maintainer ]
