@@ -11,7 +11,7 @@ dataset_id=openproblems_bmmc_cite_phase2
 dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
 
-target/docker/${task_id}_methods/run/${method_id} \
+target/docker/${task_id}_methods/${method_id}/${method_id} \
   --input_mod1 ${dataset_path}.output_mod1.h5ad \
   --input_mod2 ${dataset_path}.output_mod2.h5ad \
   --output ${pred_path}.${method_id}.output.h5ad
@@ -21,7 +21,7 @@ dataset_id=openproblems_bmmc_multiome_phase2
 dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
 
-target/docker/${task_id}_methods/run/${method_id} \
+target/docker/${task_id}_methods/${method_id}/${method_id} \
   --input_mod1 ${dataset_path}.output_mod1.h5ad \
   --input_mod2 ${dataset_path}.output_mod2.h5ad \
   --output ${pred_path}.${method_id}.output.h5ad

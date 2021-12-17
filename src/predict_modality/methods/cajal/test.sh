@@ -12,14 +12,14 @@ dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
 pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
 
-target/docker/${task_id}_methods/train/${method_id}_train \
+target/docker/${task_id}_methods/${method_id}_train/${method_id}_train \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
   --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
   --input_explore_mod1 output/datasets_explore/cite/cite_gex_processed_training.h5ad \
   --input_explore_mod2 output/datasets_explore/cite/cite_adt_processed_training.h5ad \
   --output_pretrain ${pretrain_path}
 
-target/docker/${task_id}_methods/run/${method_id} \
+target/docker/${task_id}_methods/${method_id}/${method_id} \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
   --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
   --input_test_mod1 ${dataset_path}.output_test_mod1.h5ad \
@@ -32,14 +32,14 @@ dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
 pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
 
-target/docker/${task_id}_methods/train/${method_id}_train \
+target/docker/${task_id}_methods/${method_id}_train/${method_id}_train \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
   --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
   --input_explore_mod1 output/datasets_explore/cite/cite_adt_processed_training.h5ad \
   --input_explore_mod2 output/datasets_explore/cite/cite_gex_processed_training.h5ad \
   --output_pretrain ${pretrain_path}
 
-target/docker/${task_id}_methods/run/${method_id} \
+target/docker/${task_id}_methods/${method_id}/${method_id} \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
   --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
   --input_test_mod1 ${dataset_path}.output_test_mod1.h5ad \
@@ -53,14 +53,14 @@ dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
 pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
 
-target/docker/${task_id}_methods/train/${method_id}_train \
+target/docker/${task_id}_methods/${method_id}_train/${method_id}_train \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
   --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
   --input_explore_mod1 output/datasets_explore/multiome/multiome_gex_processed_training.h5ad \
   --input_explore_mod2 output/datasets_explore/multiome/multiome_atac_processed_training.h5ad \
   --output_pretrain ${pretrain_path}
 
-target/docker/${task_id}_methods/run/${method_id} \
+target/docker/${task_id}_methods/${method_id}/${method_id} \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
   --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
   --input_test_mod1 ${dataset_path}.output_test_mod1.h5ad \
@@ -73,14 +73,14 @@ dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
 pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
 
-target/docker/${task_id}_methods/train/${method_id}_train \
+target/docker/${task_id}_methods/${method_id}_train/${method_id}_train \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
   --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
   --input_explore_mod1 output/datasets_explore/multiome/multiome_atac_processed_training.h5ad \
   --input_explore_mod2 output/datasets_explore/multiome/multiome_gex_processed_training.h5ad \
   --output_pretrain ${pretrain_path}
 
-target/docker/${task_id}_methods/run/${method_id} \
+target/docker/${task_id}_methods/${method_id}/${method_id} \
   --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
   --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
   --input_test_mod1 ${dataset_path}.output_test_mod1.h5ad \
