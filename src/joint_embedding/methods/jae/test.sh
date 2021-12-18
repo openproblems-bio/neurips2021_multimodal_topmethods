@@ -30,6 +30,7 @@ target/docker/${task_id}_methods/${method_id}/${method_id} \
 # MULTIOME
 dataset_id=openproblems_bmmc_multiome_phase2
 dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
+dataset_train_path=output/datasets_phase2_public/$task_id/$dataset_id/$dataset_id.censor_dataset
 pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
 
