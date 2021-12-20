@@ -19,6 +19,7 @@ function aws_s3 {
   fi
 }
 
+aws_s3 sync "s3://openproblems-bio/public/phase1-data/" "output/datasets_phase1"
 aws_s3 sync "s3://openproblems-bio/public/phase1v2-data/" "output/datasets_phase1v2"
 # aws_s3 sync "s3://openproblems-bio/public/phase2-data/" "output/datasets_phase2_public"
 aws_s3 sync "s3://openproblems-bio/public/phase2-data/joint_embedding/" "output/datasets_phase2_public/joint_embedding"
