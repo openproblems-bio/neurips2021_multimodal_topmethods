@@ -43,10 +43,10 @@ mod2_mat = ad_mod2.layers["counts"]
 del ad_mod2, ad_mod1
 
 if mod_type == 'ATAC':
-    mod1_svd = pk.load(open(os.path(par['input_pretrain'], 'svd_mod1.pkl'),'rb'))
-    mod2_svd = pk.load(open(os.path(par['input_pretrain'], 'svd_mod2.pkl'),'rb'))
+    mod1_svd = pk.load(open(os.path.join(par['input_pretrain'], 'svd_mod1.pkl'),'rb'))
+    mod2_svd = pk.load(open(os.path.join(par['input_pretrain'], 'svd_mod2.pkl'),'rb'))
 else:
-    mod1_svd = pk.load(open(os.path(par['input_pretrain'], 'svd_mod1.pkl'),'rb'))
+    mod1_svd = pk.load(open(os.path.join(par['input_pretrain'], 'svd_mod1.pkl'),'rb'))
     mod2_svd = None
 
 def svd_transform(mod1_data, mod2_data, mod1_svd, mod2_svd, scale=1e4):
@@ -76,7 +76,7 @@ else:
 
 coeff = [1.0, 0.0, 0.0, 0.0]
 
-with open(os.path(par['output_pretrain'], 'hyperparams.json'), 'r') as file:
+with open(os.path.join(par['output_pretrain'], 'hyperparams.json'), 'r') as file:
      params = json.load(file)
 
 mymodel = JointEmbeddingModel(params)
@@ -91,7 +91,7 @@ mymodel.compile(tf.keras.optimizers.Adam(learning_rate = params["lr"]),
             loss_weights=coeff, run_eagerly=True)
 
 #load pretrain model
-mymodel.load_weights(os.path(par['input_pretrain'], 'weights.h5'))
+mymodel.load_weights(os.path.join(par['input_pretrain'], 'weights.h5'))
 
 
 X_train = pca_combined
