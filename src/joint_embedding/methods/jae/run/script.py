@@ -1,5 +1,7 @@
+import os
 import sys
 import logging
+import json
 import anndata as ad
 import numpy as np
 from sklearn.preprocessing import normalize
@@ -41,10 +43,10 @@ mod2_mat = ad_mod2.layers["counts"]
 del ad_mod2, ad_mod1
 
 if mod_type == 'ATAC':
-    mod1_svd = pk.load(open(par['input_pretrain'] + '/svd_mod1.pkl','rb'))
-    mod2_svd = pk.load(open(par['input_pretrain'] + '/svd_mod2.pkl','rb'))
+    mod1_svd = pk.load(open(os.path(par['input_pretrain'], 'svd_mod1.pkl'),'rb'))
+    mod2_svd = pk.load(open(os.path(par['input_pretrain'], 'svd_mod2.pkl'),'rb'))
 else:
-    mod1_svd = pk.load(open(par['input_pretrain'] + '/svd_mod1.pkl','rb'))
+    mod1_svd = pk.load(open(os.path(par['input_pretrain'], 'svd_mod1.pkl'),'rb'))
     mod2_svd = None
 
 def svd_transform(mod1_data, mod2_data, mod1_svd, mod2_svd, scale=1e4):
@@ -68,28 +70,14 @@ pca_combined = np.concatenate([mod1_pca, mod2_pca],axis=1)
 del mod1_pca, mod2_pca
 
 if mod_type == 'ATAC':
-    nb_cell_types, nb_batches, nb_phases = 21, 5, 2
-    hidden_units = [150, 120, 100, 33]
-    lr_par = 2e-5
     epochs = 2
 else:
-    nb_cell_types, nb_batches, nb_phases = 45, 6, 2
-    hidden_units = [150, 120, 100, 58]
-    lr_par = 1e-4
     epochs = 1
 
-params = {
-    'dim' : pca_combined.shape[1],
-    'lr': lr_par,
-    'hidden_units' : hidden_units,
-    'nb_layers': len(hidden_units),
-    'nb_cell_types': nb_cell_types,
-    'nb_batches': nb_batches,
-    'nb_phases': nb_phases,
-    'use_batch': True,
-    'coeff': [1.0, 0.0, 0.0, 0.0]
-}
+coeff = [1.0, 0.0, 0.0, 0.0]
 
+with open(os.path(par['output_pretrain'], 'hyperparams.json'), 'r') as file:
+     params = json.load(file)
 
 mymodel = JointEmbeddingModel(params)
 mymodel(np.zeros((2, params['dim'])))
@@ -100,16 +88,16 @@ mymodel.compile(tf.keras.optimizers.Adam(learning_rate = params["lr"]),
                     tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                     tf.keras.losses.MeanSquaredError()
                     ],
-            loss_weights=params['coeff'], run_eagerly=True)
+            loss_weights=coeff, run_eagerly=True)
 
 #load pretrain model
-mymodel.load_weights(par['input_pretrain'] +'/weights.h5')
+mymodel.load_weights(os.path(par['input_pretrain'], 'weights.h5'))
 
 
 X_train = pca_combined
-c_fakes = np.random.randint(low=0, high=nb_cell_types,size=pca_combined.shape[0])
-b_fakes = np.random.randint(low=0, high=nb_batches,size=pca_combined.shape[0])
-p_fakes = np.random.randint(low=0, high=nb_phases,size=pca_combined.shape[0])
+c_fakes = np.random.randint(low=0, high=params['nb_cell_types'],size=pca_combined.shape[0])
+b_fakes = np.random.randint(low=0, high=params['nb_batches'],size=pca_combined.shape[0])
+p_fakes = np.random.randint(low=0, high=params['nb_phases'],size=pca_combined.shape[0])
 Y_train = [pca_combined, c_fakes, b_fakes, p_fakes]
 
 #finetune on the test data

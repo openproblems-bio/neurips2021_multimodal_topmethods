@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import numpy as np
 import scipy.sparse as sp
 import anndata as ad
@@ -55,7 +56,7 @@ if mod1 != "ADT":
     mod1_reducer.fit(mod1_data)
     pca_data_mod1 = mod1_reducer.transform(mod1_data)
     #print('multiome 1 done',pca_data_mod1.shape)
-    pk.dump(mod1_reducer, open(par['output_pretrain'] + "/svd_mod1.pkl","wb"))
+    pk.dump(mod1_reducer, open(os.path(par['output_pretrain'], "svd_mod1.pkl"),"wb"))
 
     del mod1_data, pca_data_mod1
 
@@ -67,7 +68,7 @@ if mod2 != "ADT":
     mod2_reducer.fit(mod2_data)
     pca_data_mod2 = mod2_reducer.transform(mod2_data)
     #print('multiome 2 done',pca_data_mod2.shape)
-    pk.dump(mod2_reducer, open(par['output_pretrain'] + "/svd_mod2.pkl","wb"))
+    pk.dump(mod2_reducer, open(os.path(par['output_pretrain'], "svd_mod2.pkl"),"wb"))
 
     del mod2_data, pca_data_mod2
 
@@ -206,6 +207,9 @@ params = {
     'use_batch': True
 }
 
+with open(os.path(par['output_pretrain'], 'hyperparams.json'), 'w') as file:
+     file.write(json.dumps(params))
+
 print('Model hyper parameters:', params)
 
 def random_classification_loss(y_true, y_pred):
@@ -223,7 +227,7 @@ model.compile(tf.keras.optimizers.Adam(learning_rate = params["lr"]),
             run_eagerly=True)
 
 callbacks = [EarlyStoppingAtMinLoss(patience=5),
-            tf.keras.callbacks.ModelCheckpoint(filepath = par['output_pretrain'] + "/weights.h5",
+            tf.keras.callbacks.ModelCheckpoint(filepath = os.path(par['output_pretrain'],"weights.h5"),
                              monitor='val_loss', save_weights_only=True)]
 
 model.fit(x=X_train, y=Y_train,
@@ -238,6 +242,6 @@ print('Start evaluation')
 eval_results = model.evaluate(X_test, Y_test, batch_size=128)
 print('Total loss, loss1, loss2, loss3, loss4:',eval_results)
 
-f_out = open(par['output_pretrain'] + '/train.log','a+')
+f_out = open(os.path(par['output_pretrain'],'train.log'),'a+')
 f_out.write('%s\t%.4f\t%.4f\t%.4f\t%.4f\n'%(suffix, eval_results[1], eval_results[2], eval_results[3], eval_results[4]))
 f_out.close()
