@@ -80,14 +80,14 @@ subtask = 'openproblems_bmmc_cite_phase2_rna'
 subtask_folder = args.data_folder + '/' + subtask + '/'
 subtask_filename = subtask_folder + subtask + '.censor_dataset.output_{}.h5ad'
 uu, vv, ee = graph_construct(ad.read_h5ad(subtask_filename.format('train_mod1')))
-pickle.dump([uu,vv,ee], open(args.extra_files_folder + 'pw.pkl', 'wb'))
+pickle.dump([uu,vv,ee], open(args.extra_files_folder + '/pw.pkl', 'wb'))
 
 print("Generating 'pw_multiome.pkl'")
 subtask = 'openproblems_bmmc_multiome_phase2_rna'
 subtask_folder = args.data_folder + '/' + subtask + '/'
 subtask_filename = subtask_folder + subtask + '.censor_dataset.output_{}.h5ad'
 uu, vv, ee = graph_construct(ad.read_h5ad(subtask_filename.format('train_mod1')))
-pickle.dump([uu,vv,ee], open(args.extra_files_folder + 'pw_multiome.pkl', 'wb'))
+pickle.dump([uu,vv,ee], open(args.extra_files_folder + '/pw_multiome.pkl', 'wb'))
 
 print("Generating 'phase2_mask.pkl'")
 subtasks = ['openproblems_bmmc_cite_phase2_rna', 'openproblems_bmmc_cite_phase2_mod2', 'openproblems_bmmc_multiome_phase2_rna', 'openproblems_bmmc_multiome_phase2_mod2']
@@ -108,7 +108,7 @@ for ts in range(4):
     mask[subtask]['test'] = l[-valid_size:]
 
 import pickle
-pickle.dump(mask, open(args.extra_files_folder + 'phase2_mask.pkl','wb'))
+pickle.dump(mask, open(args.extra_files_folder + '/phase2_mask.pkl','wb'))
 
 print("Generating 'phase2_mask_sep.pkl'")
 subtask = 'openproblems_bmmc_cite_phase2_rna'
@@ -136,4 +136,4 @@ gex2adt['train'] = train
 
 mask = {}
 mask['openproblems_bmmc_cite_phase2_rna'] = gex2adt
-pickle.dump(mask, open(args.extra_files_folder + 'phase2_mask_sep.pkl', 'wb'))
+pickle.dump(mask, open(args.extra_files_folder + '/phase2_mask_sep.pkl', 'wb'))
