@@ -49,7 +49,7 @@ mod1 = input_mod1.var["feature_types"][0]
 mod2 = input_mod2.var["feature_types"][0]
 
 if mod1 != "ADT":
-    mod1_data = scale * normalize(input_mod1.X,norm='l1', axis=1)
+    mod1_data = scale * normalize(input_mod1.layers["counts"],norm='l1', axis=1)
     mod1_data = sp.csr_matrix.log1p(mod1_data) / np.log(10)
 
     mod1_reducer = TruncatedSVD(n_components=n_components_mod1, random_state=random_seed)
@@ -61,7 +61,7 @@ if mod1 != "ADT":
     del mod1_data, pca_data_mod1
 
 if mod2 != "ADT":
-    mod2_data = scale * normalize(input_mod2.X,norm='l1', axis=1)
+    mod2_data = scale * normalize(input_mod2.layers["counts"],norm='l1', axis=1)
     mod2_data = sp.csr_matrix.log1p(mod2_data) / np.log(10)
 
     mod2_reducer = TruncatedSVD(n_components=n_components_mod2, random_state=random_seed)
