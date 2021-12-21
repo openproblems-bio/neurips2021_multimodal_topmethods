@@ -76,7 +76,7 @@ else:
 
 coeff = [1.0, 0.0, 0.0, 0.0]
 
-with open(os.path.join(par['output_pretrain'], 'hyperparams.json'), 'r') as file:
+with open(os.path.join(par['input_pretrain'], 'hyperparams.json'), 'r') as file:
      params = json.load(file)
 
 mymodel = JointEmbeddingModel(params)
