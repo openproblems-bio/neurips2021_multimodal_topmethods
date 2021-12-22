@@ -74,8 +74,8 @@ functionality:
   resources:
     - type: python_script
       path: script.py
-    - path: baseline.py
-    - path: graph_util.py
+    - path: ../resources/baseline.py
+    - path: ../resources/graph_util.py
       
 # target platforms
 platforms:
