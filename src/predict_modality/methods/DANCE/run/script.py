@@ -51,7 +51,7 @@ if mod1 == 'GEX':
     TRAIN_SIZE = train_mod1.shape[0]
     TEST_SIZE = test_mod1.shape[0]
     
-    g, bf = graph_construction(meta, train_mod1, train_mod2, test_mod1)
+    g, bf = graph_construction(meta, train_mod1, train_mod2, test_mod1, pretrain_path=par['input_pretrain'])
     
     def evaluate(mod):
         mod.eval()
