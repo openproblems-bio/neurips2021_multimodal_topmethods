@@ -30,6 +30,16 @@ functionality:
       example: "dataset_mod2.h5ad"
       description: Censored dataset.
       required: true
+    - name: "--input_test_mod1"
+      type: "file"
+      example: "dataset_test_mod1.h5ad"
+      description: Censored dataset, training cells.
+      required: true
+    - name: "--input_test_mod2"
+      type: "file"
+      example: "dataset_test_mod2.h5ad"
+      description: Censored dataset.
+      required: true
 
     # required outputs
     - name: "--output_pretrain"

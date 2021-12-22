@@ -26,6 +26,8 @@ pretrain_path = "output/pretrain/match_modality/clue/openproblems_bmmc_cite_phas
 par = {
     'input_train_mod1': f'{dataset_path}train_mod1.h5ad',
     'input_train_mod2': f'{dataset_path}train_mod2.h5ad',
+    'input_test_mod1': f'{dataset_path}test_mod1.h5ad',
+    'input_test_mod2': f'{dataset_path}test_mod2.h5ad',
     'output_pretrain': pretrain_path
 }
 meta = {
@@ -47,26 +49,20 @@ input_train_mod2 = ad.read_h5ad(par['input_train_mod2'])
 
 mod1 = input_train_mod1.var['feature_types'][0]
 mod2 = input_train_mod2.var['feature_types'][0]
-
-input_train_mod2_df = input_train_mod2.to_df()
-
 if mod1 != "ADT":
+    input_train_mod2_df = input_train_mod2.to_df()
+    
     lsi_transformer_gex = lsiTransformer(n_components=256)
     gex_train = lsi_transformer_gex.fit_transform(input_train_mod1)
+    
+    train_mod1, test_mod1, train_mod2, test_mod2 = train_test_split(gex_train, input_train_mod2_df, test_size=0.25, random_state=666)
+    input_train_mod2_df = input_train_mod2.to_df()
 else:
-    gex_train = input_train_mod1.to_df()
+    train_mod1 = input_train_mod1.to_df()
+    train_mod2 = input_train_mod2.to_df()
+    test_mod1 = ad.read_h5ad(par['input_test_mod1']).to_df()
+    test_mod2 = ad.read_h5ad(par['input_test_mod2']).to_df()
 
-# reproduce train/test split from phase 1
-batch = input_train_mod1.obs["batch"]
-train_ix = [ k for k,v in enumerate(batch) if v not in {'s1d2', 's3d7'} ]
-test_ix = [ k for k,v in enumerate(batch) if v in {'s1d2', 's3d7'} ]
-
-train_mod1 = gex_train.iloc[train_ix, :]
-train_mod2 = input_train_mod2_df.iloc[train_ix, :]
-test_mod1 = gex_train.iloc[test_ix, :]
-test_mod2 = input_train_mod2_df.iloc[test_ix, :]
-
-# train_mod1, test_mod1, train_mod2, test_mod2 = train_test_split(gex_train, input_train_mod2_df, test_size=0.25, random_state=666)
 
 if mod1 == 'ATAC' and mod2 == 'GEX':
     dataset_train = ModalityMatchingDataset(train_mod1, train_mod2)
