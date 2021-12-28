@@ -41,8 +41,6 @@ meta = {
 
 
 sys.path.append(meta['resources_dir'])
-print(meta['resources_dir'])
-print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 from data import get_dataloaders, ModalityMatchingDataset
 from models import Modality_CLIP, Encoder, symmetric_npair_loss
 from catalyst_tools import scRNARunner, CustomMetric
@@ -60,29 +58,6 @@ mod1 = input_train_mod1.var['feature_types'][0]
 mod2 = input_train_mod2.var['feature_types'][0]
 
 input_train_mod2 = input_train_mod2[sol_train.to_df().values.argmax(1)]
-
-#if(mod1 == 'ADT' or mod2 == 'ADT'): #train on phase1 data
-#    import config_ADT2GEX as config
-#    input_test_mod1 = ad.read_h5ad(par['input_test_mod1'])
-#    input_test_mod2 = ad.read_h5ad(par['input_test_mod2'])
-#    sol_test = ad.read_h5ad(par['input_test_sol'])
-#    input_test_mod2 = input_test_mod2[sol_test.to_df().values.argmax(1)]
-#    lsi_transformer_gex = lsiTransformer(n_components=config.N_LSI_COMPONENTS_GEX, drop_first=True)
-#    if(mod1 == 'ADT'):
-#        gex_train = lsi_transformer_gex.fit_transform(input_train_mod2)
-#        gex_test = lsi_transformer_gex.transform(input_test_mod2)
-#        adt_train = input_train_mod1.to_df()
-#        adt_test = input_test_mod1.to_df()
-#    dataset_train = ModalityMatchingDataset(adt_train, gex_train)
-#    dataset_test = ModalityMatchingDataset(adt_test, gex_test)
-#    
-#    dataloader_train = torch.utils.data.DataLoader(dataset_train, config.BATCH_SIZE, shuffle = True)
-#    dataloader_test = torch.utils.data.DataLoader(dataset_test, 2048, shuffle = False)
-#    #else: #
-#    #    gex_train = lsi_transformer_gex.fit_transform(input_train_mod1)
-#    #    gex_test = lsi_transformer_gex.transform(input_test_mod1)
-#    #    adt_train = input_train_mod2.to_df()
-#    #    adt_test = input_test_mod2.to_df()
     
 if(mod1 == 'ADT' or mod2 == 'ADT'): #train on phase1 data
     import config_ADT2GEX as config
@@ -100,11 +75,6 @@ if(mod1 == 'ADT' or mod2 == 'ADT'): #train on phase1 data
     
     dataloader_train = torch.utils.data.DataLoader(dataset_train, config.BATCH_SIZE, shuffle = True)
     dataloader_test = torch.utils.data.DataLoader(dataset_test, 2048, shuffle = False)
-    #else: #
-    #    gex_train = lsi_transformer_gex.fit_transform(input_train_mod1)
-    #    gex_test = lsi_transformer_gex.transform(input_test_mod1)
-    #    adt_train = input_train_mod2.to_df()
-    #    adt_test = input_test_mod2.to_df()
     
     
     
@@ -128,13 +98,7 @@ else: #train on phase2 data
     
     dataloader_train = torch.utils.data.DataLoader(dataset_train, config.BATCH_SIZE, shuffle = True)
     dataloader_test = torch.utils.data.DataLoader(dataset_test, 2048, shuffle = False)
-        
-    #else:
-    #    atac_train = lsi_transformer_atac.fit_transform(input_train_mod2[train_indexes])
-    #    atac_test = lsi_transformer_atac.transform(input_train_mod2[test_indexes])
-    #    
-    #    gex_train = lsi_transformer_gex.fit_transform(input_train_mod1[train_index])
-    #    gex_test = lsi_transformer_gex.transform(input_train_mod1[test_indexes])
+
 
 model = Modality_CLIP(
     Encoder=Encoder, 
@@ -165,7 +129,6 @@ runner.train(
     optimizer=optimizer,
     loaders=loaders,
     num_epochs=config.N_EPOCHS,
-    #scheduler=scheduler,
     callbacks=[
         dl.OptimizerCallback(metric_key='loss'),
         dl.CheckpointCallback(
@@ -187,11 +150,7 @@ runner.train(
             input_key=['embeddings_first', 'embeddings_second', 'temperature'],
             target_key=['embeddings_second']
         ),
-        #dl.SchedulerCallback(loader_key='valid', metric_key='avg_acc'),
-        #dl.CheckRunCallback(num_batch_steps=40, num_epoch_steps=50)
     ],
-    #valid_metric='loss',
-    #valid_loader='valid',
     verbose=True
 )
 

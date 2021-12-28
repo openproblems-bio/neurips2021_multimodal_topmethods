@@ -22,14 +22,11 @@ class BatchSwapNoise(nn.Module):
             return x
 
 
-#TODO rewrite forward pass for dropout
 class Encoder(nn.Module):
     def __init__(self, n_input, embedding_size, dropout_rates, dims_layers, swap_noise_ratio):
         super(Encoder, self).__init__()
         dropout = []
         layers = []
-        
-        #layers.append(BatchSwapNoise(swap_noise_ratio))
         layers.append(nn.Linear(n_input, dims_layers[0]))
         
         for i in range(len(dims_layers)-1):
@@ -47,7 +44,6 @@ class Encoder(nn.Module):
             x = F.elu(self.fc_list[i](x))
             if(i<len(self.dropout_list)):
                  x = self.dropout_list[i](x)
-            #    x = self.dropout_list[i-1](x)
             
         x = self.fc_list[-1](x)
         return x

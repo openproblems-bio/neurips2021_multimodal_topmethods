@@ -48,9 +48,6 @@ meta = { 'resources_dir'='.',
 
 sys.path.append(meta['resources_dir'])
 
-#meta['resources_dir'] + 'src/test.pth'
-#weight = torch.load(meta['resources_dir'] + '/src/test.pth', map_location='cpu')
-#print("YEEEES")
 input_train_mod1 = ad.read_h5ad(par['input_train_mod1'])
 input_train_mod2 = ad.read_h5ad(par['input_train_mod2'])
 input_train_sol = ad.read_h5ad(par['input_train_sol'])
@@ -114,8 +111,6 @@ class lsiTransformer():
         self.tfidfTransformer = tfidfTransformer()
         self.normalizer =  sklearn.preprocessing.Normalizer(norm="l1")
         self.pcaTransformer = sklearn.decomposition.TruncatedSVD(n_components = self.n_components, random_state=777)
-        # self.lsi_mean = None
-        # self.lsi_std = None
         self.fitted = None
         
     def fit(self, adata: anndata.AnnData):
@@ -126,8 +121,6 @@ class lsiTransformer():
         X_norm = self.normalizer.fit_transform(X)
         X_norm = np.log1p(X_norm * 1e4)
         X_lsi = self.pcaTransformer.fit_transform(X_norm)
-        # self.lsi_mean = X_lsi.mean(axis=1, keepdims=True)
-        # self.lsi_std = X_lsi.std(axis=1, ddof=1, keepdims=True)
         self.fitted = True
     
     def transform(self, adata):
@@ -188,7 +181,6 @@ class ModalityMatchingDataset(Dataset):
         self, df_modality1, df_modality2, df_adjacency_matrix, is_train
     ):
         super().__init__()
-        #self.df = df.reset_index(drop=True).copy()
         self.is_train = is_train
         
         self.df_modality1 = df_modality1
@@ -232,7 +224,6 @@ class Encoder(nn.Module):
             x = F.elu(self.fc_list[i](x))
             if(i<len(self.dropout_list)):
                  x = self.dropout_list[i](x)
-            #    x = self.dropout_list[i-1](x)
             
         x = self.fc_list[-1](x)
         return x
@@ -317,14 +308,10 @@ if(input_test_mod1.to_df().shape[1] == 134 or input_test_mod2.to_df().shape[1]==
     indexes = []
     model.eval();
     for x1, x2 in data_test:
-        #print(x1.shape)
         if(x1.shape[1] == 134):
             logits,features_mod1, features_mod2 = model(x1, x2)
         elif(x1.shape[1] == 256):
             logits, features_mod1, features_mod2 = model(x2, x1)
-        
-        #features_mod1 = features_mod1/torch.norm(features_mod1, p=2, dim=-1, keepdim=True)
-        #features_mod2 = features_mod2/torch.norm(features_mod2, p=2, dim=-1, keepdim=True)
         
         all_emb_mod1.append(features_mod1.detach().cpu())
         all_emb_mod2.append(features_mod2.detach().cpu())
@@ -333,9 +320,7 @@ if(input_test_mod1.to_df().shape[1] == 134 or input_test_mod2.to_df().shape[1]==
     all_emb_mod2 = torch.cat(all_emb_mod2)
     if(x1.shape[1] == 134):
         out1_2 = (all_emb_mod1@all_emb_mod2.T).detach().cpu().numpy()
-        #out1_2 = F.softmax(model.logit_scale.exp().cpu()*10000*all_emb_mod1@all_emb_mod2.T).detach().cpu().numpy()
     elif(x1.shape[1] == 256):
-        #out1_2 = F.softmax(model.logit_scale.exp().cpu()*10000*(all_emb_mod1@all_emb_mod2.T).T).detach().cpu().numpy()
         out1_2 = ((all_emb_mod1@all_emb_mod2.T).T).detach().cpu().numpy()
         
     out1_2 = get_bipartite_matching_adjacency_matrix_mk3(out1_2, threshold_quantile=0.990)
@@ -395,9 +380,7 @@ else:
     all_emb_mod2 = torch.cat(all_emb_mod2)
     if(shape_1 == 116490):
         out1_2 = (all_emb_mod1@all_emb_mod2.T).detach().cpu().numpy()
-        #out1_2 = F.softmax(model.logit_scale.exp().cpu()*10000*all_emb_mod1@all_emb_mod2.T).detach().cpu().numpy()
     else:
-        #out1_2 = F.softmax(model.logit_scale.exp().cpu()*10000*(all_emb_mod1@all_emb_mod2.T).T).detach().cpu().numpy()
         out1_2 = ((all_emb_mod1@all_emb_mod2.T).T).detach().cpu().numpy()
         
     out1_2 = get_bipartite_matching_adjacency_matrix_mk3(out1_2, threshold_quantile=0.990)

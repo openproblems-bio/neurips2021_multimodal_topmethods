@@ -5,7 +5,6 @@ class ModalityMatchingDataset(Dataset):
         self, df_modality1, df_modality2
     ):
         super().__init__()
-        #self.df = df.reset_index(drop=True).copy()
         
         self.df_modality1 = df_modality1.values
         self.df_modality2 = df_modality2.values
@@ -15,8 +14,6 @@ class ModalityMatchingDataset(Dataset):
         return self.df_modality1.shape[0]
     
     def __getitem__(self, index: int):
-        #x_modality_1 = self.df_modality1.iloc[index].values
-        #x_modality_2 = self.df_modality2.iloc[index].values  
         x_modality_1 = self.df_modality1[index]
         x_modality_2 = self.df_modality2[index]
         return {'features_first':x_modality_1, 'features_second':x_modality_2}

@@ -69,8 +69,6 @@ class lsiTransformer():
         self.tfidfTransformer = tfidfTransformer()
         self.normalizer =  sklearn.preprocessing.Normalizer(norm="l1")
         self.pcaTransformer = sklearn.decomposition.TruncatedSVD(n_components = self.n_components, random_state=777)
-        # self.lsi_mean = None
-        # self.lsi_std = None
         self.fitted = None
         
     def fit(self, adata: anndata.AnnData):
@@ -81,8 +79,6 @@ class lsiTransformer():
         X_norm = self.normalizer.fit_transform(X)
         X_norm = np.log1p(X_norm * 1e4)
         X_lsi = self.pcaTransformer.fit_transform(X_norm)
-        # self.lsi_mean = X_lsi.mean(axis=1, keepdims=True)
-        # self.lsi_std = X_lsi.std(axis=1, ddof=1, keepdims=True)
         self.fitted = True
     
     def transform(self, adata):

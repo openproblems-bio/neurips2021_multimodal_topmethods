@@ -26,8 +26,7 @@ def topN_logits(logits, topn, ):
     n_logits = np.zeros(logits.shape)
     n_logits[:] = -100000
     n_logits = torch.tensor(n_logits)
-    
-    #TODO: Vectorize!?
+
     for i in tqdm(range(len(ind))):
         for j in range(len(ind[0])):
             ii = ind[i][j]
