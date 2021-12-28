@@ -19,32 +19,18 @@ functionality:
       example: "dataset_mod1.h5ad"
       description: Censored dataset, training cells.
       required: true
-    - name: "--input_test_mod1"
-      type: "file"
-      example: "dataset_mod1.h5ad"
-      description: Censored dataset, test cells.
-      required: true
     - name: "--input_train_mod2"
       type: "file"
       example: "dataset_mod2.h5ad"
       description: Censored dataset.
       required: true
     # required outputs
-    - name: "--output"
+    - name: "--output_pretrain"
       type: "file"
       direction: "output"
-      example: "output.h5ad"
-      description: Dataset with predicted values for modality2.
+      example: "pretrain_model"
+      description: Path to the directory containing a pretrained model.
       required: true
-    # additional parameters
-    - name: "--distance_method"
-      type: "string"
-      default: "minkowski"
-      description: The distance metric to use. Possible values include `euclidean` and `minkowski`.
-    - name: "--n_pcs"
-      type: "integer"
-      default: 50
-      description: Number of components to use for dimensionality reduction.
       
   # files your script needs
   resources:
