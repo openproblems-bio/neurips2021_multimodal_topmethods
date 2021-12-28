@@ -1,0 +1,99 @@
+functionality:
+  name: simple_mlp
+  namespace: predict_modality_starter_kits
+  
+  # metadata for your method
+  version: dev
+  description: A description for your method.
+  authors:
+    - name: Jiwei Liu, Xueer Chen
+      email: jiweil@nvidia.com
+      roles: [ author, maintainer ]
+      props: { github: daxiongshu, orcid: "0000-1111-2222-3333" }
+      
+  # parameters
+  arguments:
+    # required inputs
+    - name: "--input_train_mod1"
+      type: "file"
+      example: "dataset_mod1.h5ad"
+      description: Censored dataset, training cells.
+      required: true
+    - name: "--input_test_mod1"
+      type: "file"
+      example: "dataset_mod1.h5ad"
+      description: Censored dataset, test cells.
+      required: true
+    - name: "--input_train_mod2"
+      type: "file"
+      example: "dataset_mod2.h5ad"
+      description: Censored dataset.
+      required: true
+    # required outputs
+    - name: "--output"
+      type: "file"
+      direction: "output"
+      example: "output.h5ad"
+      description: Dataset with predicted values for modality2.
+      required: true
+    # additional parameters
+    - name: "--distance_method"
+      type: "string"
+      default: "minkowski"
+      description: The distance metric to use. Possible values include `euclidean` and `minkowski`.
+    - name: "--n_pcs"
+      type: "integer"
+      default: 50
+      description: Number of components to use for dimensionality reduction.
+      
+  # files your script needs
+  resources:
+    - type: python_script
+      path: script.py
+    - path: utils.py
+    - path: models.py
+    - path: const.py
+    - path: predict.py
+    - path: yaml
+    - path: weights
+  
+  # resources for unit testing your component
+  tests:
+    - type: python_script
+      path: test.py
+    - path: sample_data
+      
+# target platforms
+platforms:
+
+  # By specifying 'docker' platform, viash will build a standalone
+  # executable which uses docker in the back end to run your method.
+  - type: docker
+    # you need to specify a base image that contains at least bash and python
+    image: pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime
+    run_args: [ "--gpus all", "--ipc=host"]
+    # You can specify additional dependencies with 'setup'. 
+    # See https://viash.io/docs/reference_config/platform-docker/#setup-list
+    # for more information on how to add more dependencies.
+    setup:
+      # - type: apt
+      #   packages:
+      #     - bash
+      # - type: python
+      #   packages:
+      #     - scanpy
+      - type: python
+        packages:
+          - scikit-learn
+          - anndata
+          - scanpy
+          - pytorch-lightning
+
+  # By specifying a 'nextflow', viash will also build a viash module
+  # which uses the docker container built above to also be able to 
+  # run your method as part of a nextflow pipeline.
+  - type: nextflow
+    labels: [ highmem, hightime, highcpu, gpu]
+
+  # used for saturn cloud
+  - type: native
