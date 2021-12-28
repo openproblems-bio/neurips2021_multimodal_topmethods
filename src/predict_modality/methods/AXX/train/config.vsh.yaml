@@ -36,12 +36,7 @@ functionality:
   resources:
     - type: python_script
       path: script.py
-    - path: utils.py
-    - path: models.py
-    - path: const.py
-    - path: predict.py
-    - path: yaml
-    - path: weights
+    - path: ../resources
   
   # resources for unit testing your component
   tests:
