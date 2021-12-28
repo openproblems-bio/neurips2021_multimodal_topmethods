@@ -35,7 +35,7 @@ par = {
 }
 meta = {
     'resources_dir': '.',
-    'functionality_name': '1711200'
+    'functionality_name': '169594'
 }
 ## VIASH END
 
