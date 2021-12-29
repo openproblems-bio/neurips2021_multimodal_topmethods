@@ -24,7 +24,7 @@ def _train(X, y, Xt, yt, enable_ckpt, logger, yaml_path):
     Xt = torch.from_numpy(Xt).float()
     yt = torch.from_numpy(yt).float()
     te_ds = TensorDataset(Xt,yt)
-    te_loader = DataLoader(te_ds, batch_size=config.batch_size,num_workers=8,
+    te_loader = DataLoader(te_ds, batch_size=config.batch_size,num_workers=0,
                         shuffle=False, drop_last=False)
     
     checkpoint_callback = ModelCheckpoint(monitor='valid_RMSE')

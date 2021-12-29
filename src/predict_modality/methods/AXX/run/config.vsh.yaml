@@ -15,7 +15,7 @@ functionality:
     - name: Xueer Chen
       email: xc2579@columbia.edu
       roles: [ author, maintainer ]
-      props: { github: xuerchen, orcid: "0000-0002-8799-9763" }
+      props: { github: xuerchen, orcid: "0000-0000-0000-0000" }
     - name: Jiwei Liu
       email: jiweil@nvidia.com
       roles: [ author, maintainer ]
