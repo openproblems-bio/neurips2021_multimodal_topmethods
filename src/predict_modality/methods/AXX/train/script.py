@@ -3,8 +3,6 @@ import logging
 import anndata as ad
 import pickle
 import numpy as np
-import tensorflow as tf
-from tensorflow import keras
 import pandas as pd
 import scanpy as sc
 from sklearn.preprocessing import binarize
@@ -19,7 +17,6 @@ par = {
 }
 
 meta = {
-    'functionality_name': 'AXX', 
     'resources_dir': 'src/predict_modality/methods/AXX/resources'
 }
 ## VIASH END

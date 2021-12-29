@@ -30,7 +30,6 @@ par = {
     'output': 'output.h5ad'
 }
 meta = {
-    'functionality_name': 'AXX', 
     'resources_dir': 'src/predict_modality/methods/AXX/resources'
 }
 ## VIASH END
