@@ -47,7 +47,11 @@ functionality:
   resources:
     - type: python_script
       path: script.py
-    - path: ../resources
+    - path: ../resources/train.py
+    - path: ../resources/models.py
+    - path: ../resources/utils.py
+    - path: ../resources/const.py
+    - path: ../resources/yaml
 
 # target platforms
 platforms:
