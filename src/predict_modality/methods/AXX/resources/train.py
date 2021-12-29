@@ -61,44 +61,24 @@ def train(task,cp,wp,tr1,tr2):
     msgs = {}
     for fold in range(3):
 
-        if not dummy_run:
-            run_name = f"{task}_fold_{fold}"
-            save_path = f'{wp}/{run_name}'
-            Path(save_path).mkdir(parents=True, exist_ok=True)   
+        run_name = f"{task}_fold_{fold}"
+        save_path = f'{wp}/{run_name}'
+        Path(save_path).mkdir(parents=True, exist_ok=True)   
 
         X,y,Xt,yt = utils.split(tr1, tr2, fold)
         run_name = f'fold_{fold}'
-        if dummy_run:
-            logger = None
-        else:
-            logger = TensorBoardLogger(save_path, name='') 
+        logger = TensorBoardLogger(save_path, name='') 
         
-        if dummy_run:
-            X = X[:512]
-            y = y[:512]
-            Xt = Xt[:512]
-            yt = yt[:512]
-            enable_ckpt = False
-        else:
-            enable_ckpt = True
+        enable_ckpt = True
         
         score, yp = _train(X, y, Xt, yt, enable_ckpt, logger, yaml_path)
-        #yp = np.mean(y,axis=0,keepdims=True)*np.ones_like(yt)
-        #score = ((yp-yt)**2).mean()**0.5
         yps.append(yp)
         scores.append(score)
         msg = f"{task} Fold {fold} RMSE {score:.3f}"
         msgs[f'Fold {fold}'] = f'{score:.3f}'
         print(msg)
 
-
     yp = np.concatenate(yps)
     score = np.mean(scores)
     msgs['Overall'] = f'{score:.3f}'
     print('Overall', f'{score:.3f}')
-
-    
-if __name__ == '__main__':
-    dummy_run = False
-    for task in ['GEX2ADT','ADT2GEX','ATAC2GEX']:
-        train(task=task,dummy_run=dummy_run)
