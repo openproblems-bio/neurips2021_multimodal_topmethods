@@ -1,15 +1,25 @@
 functionality:
-  name: simple_mlp
-  namespace: predict_modality_starter_kits
+  name: AXX
+  namespace: predict_modality_methods
   
   # metadata for your method
-  version: dev
-  description: A description for your method.
+  description: Ensemble of MLPs trained on differnt sites
+  info:
+    submission_id: "170812"
+    team_name: AXX
+    # project_url: https://github.com/foo/bar
+    # publication_doi: 10.1101/0123.45.67.890123
+    # publication_url: https://arxiv.org/abs/1234.56789
+
   authors:
-    - name: Jiwei Liu, Xueer Chen
+    - name: Xueer Chen
+      email: xc2579@columbia.edu
+      roles: [ author, maintainer ]
+      props: { github: xuerchen, orcid: "0000-0002-8799-9763" }
+    - name: Jiwei Liu
       email: jiweil@nvidia.com
       roles: [ author, maintainer ]
-      props: { github: daxiongshu, orcid: "0000-1111-2222-3333" }
+      props: { github: daxiongshu, orcid: "0000-0002-8799-9763" }
       
   # parameters
   arguments:
