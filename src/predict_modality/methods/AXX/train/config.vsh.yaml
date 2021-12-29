@@ -1,5 +1,5 @@
 functionality:
-  name: AXX_train
+  name: axx_train
   namespace: predict_modality_methods
   
   # metadata for your method
