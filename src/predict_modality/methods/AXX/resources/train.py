@@ -18,7 +18,7 @@ def _train(X, y, Xt, yt, enable_ckpt, logger, yaml_path):
     ymean = torch.mean(y,dim=0,keepdim=True)
     
     tr_ds = TensorDataset(X,y)
-    tr_loader = DataLoader(tr_ds, batch_size=config.batch_size,num_workers=8,
+    tr_loader = DataLoader(tr_ds, batch_size=config.batch_size,num_workers=0,
                         shuffle=True, drop_last=True)
     
     Xt = torch.from_numpy(Xt).float()

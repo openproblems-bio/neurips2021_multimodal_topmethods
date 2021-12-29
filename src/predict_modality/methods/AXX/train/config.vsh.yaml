@@ -61,7 +61,7 @@ platforms:
   - type: docker
     # you need to specify a base image that contains at least bash and python
     image: pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime
-    run_args: [ "--gpus all --shm-size=5G"]
+    run_args: [ "--gpus all --ipc=host"]
     # You can specify additional dependencies with 'setup'. 
     # See https://viash.io/docs/reference_config/platform-docker/#setup-list
     # for more information on how to add more dependencies.
