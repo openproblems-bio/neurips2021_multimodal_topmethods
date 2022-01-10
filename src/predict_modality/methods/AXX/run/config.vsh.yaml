@@ -3,7 +3,7 @@ functionality:
   namespace: predict_modality_methods
   
   # metadata for your method
-  description: Ensemble of MLPs trained on differnt sites
+  description: Ensemble of MLPs trained on different sites
   info:
     submission_id: "170812"
     team_name: AXX

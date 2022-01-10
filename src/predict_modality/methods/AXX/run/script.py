@@ -1,13 +1,3 @@
-# Dependencies:
-# pip: scikit-learn, anndata, scanpy
-#
-# Python starter kit for the NeurIPS 2021 Single-Cell Competition.
-# Parts with `TODO` are supposed to be changed by you.
-#
-# More documentation:
-#
-# https://viash.io/docs/creating_components/python/
-
 import logging
 import anndata as ad
 import sys
@@ -37,17 +27,10 @@ sys.path.append(meta['resources_dir'])
 from predict import predict
 from utils import get_y_dim
 
-# TODO: change this to the name of your method
-method_id = "simple_mlp"
-
 logging.info('Reading `h5ad` files...')
 input_train_mod1 = ad.read_h5ad(par['input_train_mod1'])
 input_train_mod2 = ad.read_h5ad(par['input_train_mod2'])
 input_test_mod1 = ad.read_h5ad(par['input_test_mod1'])
-
-
-# TODO: change this to the name of your method
-method_id = "simple_mlp"
 
 y_dim,task = get_y_dim(par['input_test_mod1'])
 ymean = np.asarray(input_train_mod2.X.mean(axis=0))
@@ -67,7 +50,7 @@ adata = ad.AnnData(
     var=input_train_mod2.var,
     uns={
         'dataset_id': input_train_mod1.uns['dataset_id'],
-        'method_id': method_id,
+        'method_id': "axx",
     },
 )
 
