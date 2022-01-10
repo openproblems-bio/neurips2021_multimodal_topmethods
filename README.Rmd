@@ -38,7 +38,7 @@ comp_df <- map_df(seq_along(comp_yamls), function(i) {
       email = aut$email,
       roles = list(aut$roles),
       orcid = ifelse(is.null(aut$props$orcid), "", paste0(" <a href='https://orcid.org/", aut$props$orcid, "'><img src='resources/orcid_id.svg' height='16'></a>")),
-      github = ifelse(is.null(aut$props$github), "", paste0(" <a href='https://github.com/", aut$author$github, "'><img src='resources/github_mark.svg' height='16'></a>")),
+      github = ifelse(is.null(aut$props$github), "", paste0(" <a href='https://github.com/", aut$props$github, "'><img src='resources/github_mark.svg' height='16'></a>")),
       url = ifelse(is.null(aut$props$url), name, paste0("<a href='", aut$props$url, "'>", name, "</a>")), 
       md = paste0(url, orcid, github)
     )
