@@ -20,7 +20,7 @@ REPO_ROOT=$(git rev-parse --show-toplevel)
 # ensure that the command below is run from the root of the repository
 cd "$REPO_ROOT"
 
-curl -fsSL get.viash.io | bash -s -- \
+curl -fsSL http://get.viash.io | bash -s -- \
   --viash bin/viash \
   --registry openproblems \
   --tag 0.5.5 \

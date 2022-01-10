@@ -1,0 +1,89 @@
+functionality:
+  name: axx_train
+  namespace: predict_modality_methods
+  
+  # metadata for your method
+  description: Ensemble of MLPs trained on differnt sites
+  info:
+    submission_id: "170812"
+    team_name: AXX
+    # project_url: https://github.com/foo/bar
+    # publication_doi: 10.1101/0123.45.67.890123
+    # publication_url: https://arxiv.org/abs/1234.56789
+
+  authors:
+    - name: Xueer Chen
+      email: xc2579@columbia.edu
+      roles: [ author, maintainer ]
+      props: { github: xuerchen, orcid: "0000-0000-0000-0000" }
+    - name: Jiwei Liu
+      email: jiweil@nvidia.com
+      roles: [ author, maintainer ]
+      props: { github: daxiongshu, orcid: "0000-0002-8799-9763" }
+
+      
+  # parameters
+  arguments:
+    # required inputs
+    - name: "--input_train_mod1"
+      type: "file"
+      example: "dataset_mod1.h5ad"
+      description: Censored dataset, training cells.
+      required: true
+    - name: "--input_train_mod2"
+      type: "file"
+      example: "dataset_mod2.h5ad"
+      description: Censored dataset.
+      required: true
+    # required outputs
+    - name: "--output_pretrain"
+      type: "file"
+      direction: "output"
+      example: "pretrain_model"
+      description: Path to the directory containing a pretrained model.
+      required: true
+      
+  # files your script needs
+  resources:
+    - type: python_script
+      path: script.py
+    - path: ../resources/train.py
+    - path: ../resources/models.py
+    - path: ../resources/utils.py
+    - path: ../resources/const.py
+    - path: ../resources/yaml
+
+# target platforms
+platforms:
+
+  # By specifying 'docker' platform, viash will build a standalone
+  # executable which uses docker in the back end to run your method.
+  - type: docker
+    # you need to specify a base image that contains at least bash and python
+    image: pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime
+    run_args: [ "--gpus all --ipc=host"]
+    # You can specify additional dependencies with 'setup'. 
+    # See https://viash.io/docs/reference_config/platform-docker/#setup-list
+    # for more information on how to add more dependencies.
+    setup:
+      # - type: apt
+      #   packages:
+      #     - bash
+      # - type: python
+      #   packages:
+      #     - scanpy
+      - type: python
+        packages:
+          - scikit-learn
+          - anndata
+          - scanpy
+          - pytorch-lightning
+
+  # By specifying a 'nextflow', viash will also build a viash module
+  # which uses the docker container built above to also be able to 
+  # run your method as part of a nextflow pipeline.
+  - type: nextflow
+    labels: [ highmem, hightime, highcpu, gpu]
+
+  # used for saturn cloud
+  - type: native
