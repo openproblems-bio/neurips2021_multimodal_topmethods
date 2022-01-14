@@ -1,4 +1,4 @@
-[NeurIPS 2021 Competition Track - Multimodal Single-Cell Data Integration] Predict Modality
+[scJoint] Predict Modality
 ===
 Team scJoint: Yu-Hsiu Chen, Sheng Wan, Tung-Yu Wu
 
