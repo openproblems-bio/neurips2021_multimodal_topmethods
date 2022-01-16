@@ -55,6 +55,9 @@ functionality:
     - path: generate_extra_files.py
     - path: h.all.v7.4.entrez.gmt
     - path: h.all.v7.4.symbols.gmt
+    # suggestion: use same WeightedGCN4 as run component
+    # to use, uncomment the following line
+    # - path: ../resources/graph_util.py
       
 # target platforms
 platforms:
