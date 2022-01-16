@@ -37,7 +37,6 @@ ymean = np.asarray(input_train_mod2.X.mean(axis=0))
 if task == 'GEX2ATAC':
     y_pred = ymean*np.ones([input_test_mod1.shape[0],y_dim])
 else:
-    
     y_pred = predict(ymean,test_data_path=par['input_test_mod1'],
                      folds=[0,1,2],cp=meta['resources_dir'],
                      wp=par['input_pretrain'])
@@ -50,7 +49,7 @@ adata = ad.AnnData(
     var=input_train_mod2.var,
     uns={
         'dataset_id': input_train_mod1.uns['dataset_id'],
-        'method_id': "axx",
+        'method_id': meta['functionality_name'],
     },
 )
 
