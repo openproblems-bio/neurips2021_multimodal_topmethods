@@ -4,7 +4,7 @@ functionality:
   
   # metadata for your method
   
-  description: A description for your method.
+  description: The task is solved via training encoder-decoder MLP model with one output neuron per component in the target. As an input, the encoders use representations obtained from ATAC and GEX data via LSI transform and raw ADT data. The hyperparameters of the models were found via broad hyperparameter search using the Optuna framework.
   
   authors:
     - name: Gleb Ryazantsev

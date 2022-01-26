@@ -8,9 +8,9 @@ task_id=match_modality
 
 
 # CITE ADT2GEX
-dataset_id=openproblems_bmmc_cite_phase1_mod2
+dataset_id=openproblems_bmmc_cite_phase2_mod2
 dataset_id_val=openproblems_bmmc_cite_phase2_mod2
-dataset_path=output/datasets_phase1/$task_id/$dataset_id/$dataset_id.censor_dataset
+dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
 dataset_path_val=output/datasets/$task_id/$dataset_id_val/$dataset_id_val.censor_dataset
 pretrain_path=output/pretrain/$task_id/$method_id/$dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
@@ -35,7 +35,7 @@ target/docker/${task_id}_methods/${method_id}/${method_id} \
   
 #CITE GEX2ADT
 dataset_id=openproblems_bmmc_cite_phase2_rna
-pretrain_dataset_id=openproblems_bmmc_cite_phase1_mod2
+pretrain_dataset_id=openproblems_bmmc_cite_phase2_mod2
 dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
 pretrain_path=output/pretrain/$task_id/$method_id/$pretrain_dataset_id.${method_id}_train.output_pretrain/
 pred_path=output/predictions/$task_id/$dataset_id/$dataset_id

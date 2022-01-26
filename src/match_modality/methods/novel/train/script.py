@@ -15,7 +15,7 @@ from catalyst import dl, utils
 import catalyst
 import os
 
-
+from sklearn.model_selection import LeaveOneGroupOut
 
 ## VIASH START
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
@@ -59,26 +59,91 @@ mod2 = input_train_mod2.var['feature_types'][0]
 
 input_train_mod2 = input_train_mod2[sol_train.to_df().values.argmax(1)]
     
-if(mod1 == 'ADT' or mod2 == 'ADT'): #train on phase1 data
+if(mod1 == 'ADT' or mod2 == 'ADT'):
     import config_ADT2GEX as config
-    test_indexes = sol_train.obs.batch == 's1d1'
-    train_indexes = sol_train.obs.batch != 's1d1'
     
-    lsi_transformer_gex = lsiTransformer(n_components=config.N_LSI_COMPONENTS_GEX, drop_first=True)
-    if(mod1 == 'ADT'):
-        gex_train = lsi_transformer_gex.fit_transform(input_train_mod2[train_indexes])
-        gex_test = lsi_transformer_gex.transform(input_train_mod2[test_indexes])
-        adt_train = input_train_mod1[train_indexes].to_df()
-        adt_test = input_train_mod1[test_indexes].to_df()
-    dataset_train = ModalityMatchingDataset(adt_train, gex_train)
-    dataset_test = ModalityMatchingDataset(adt_test, gex_test)
+    logo = LeaveOneGroupOut()
+    groups = sol_train.obs.batch
+    logo.get_n_splits(input_train_mod2, groups=groups)
     
-    dataloader_train = torch.utils.data.DataLoader(dataset_train, config.BATCH_SIZE, shuffle = True)
-    dataloader_test = torch.utils.data.DataLoader(dataset_test, 2048, shuffle = False)
+    for fold_number, (train_indexes, test_indexes) in enumerate(logo.split(input_train_mod2, groups=groups)):
+        trial_dump_folder = os.path.join(par['output_pretrain'], str(fold_number))
+        os.makedirs(trial_dump_folder, exist_ok=True)
+        
+        lsi_transformer_gex = lsiTransformer(n_components=config.N_LSI_COMPONENTS_GEX, drop_first=True)
+        
+        if(mod1 == 'ADT'):
+            gex_train = lsi_transformer_gex.fit_transform(input_train_mod2[train_indexes])
+            gex_test = lsi_transformer_gex.transform(input_train_mod2[test_indexes])
+            adt_train = input_train_mod1[train_indexes].to_df()
+            adt_test = input_train_mod1[test_indexes].to_df()
+            
+            dataset_train = ModalityMatchingDataset(adt_train, gex_train)
+            dataset_test = ModalityMatchingDataset(adt_test, gex_test)
+            
+            dataloader_train = torch.utils.data.DataLoader(dataset_train, config.BATCH_SIZE, shuffle = True)
+            dataloader_test = torch.utils.data.DataLoader(dataset_test, 2048, shuffle = False)
+            
+                
+            model = Modality_CLIP(
+                Encoder=Encoder, 
+                layers_dims = (
+                  config.LAYERS_DIM_FIRST, 
+                  config.LAYERS_DIM_GEX
+                ),
+                dropout_rates = (
+                  config.DROPOUT_RATES_FIRST, 
+                  config.DROPOUT_RATES_GEX
+                ),
+                dim_mod1 = 134 if mod1 == 'ADT' else config.N_LSI_COMPONENTS_FIRST,
+                dim_mod2 = config.N_LSI_COMPONENTS_GEX, 
+                output_dim = config.EMBEDDING_DIM,
+                T = config.LOG_T,
+                swap_rate_1 = 0.,
+                swap_rate_2 = 0.)
+        
+            optimizer = torch.optim.Adam(model.parameters(), config.LR, weight_decay=config.weight_decay)
+            loaders = {
+                "train": dataloader_train,
+                "valid": dataloader_test,
+            }
+            runner = scRNARunner()
+            
+            runner.train(
+                model=model,
+                optimizer=optimizer,
+                loaders=loaders,
+                num_epochs=config.N_EPOCHS,
+                callbacks=[
+                    dl.OptimizerCallback(metric_key='loss'),
+                    dl.CheckpointCallback(
+                        logdir = trial_dump_folder,
+                        loader_key='valid',
+                        metric_key='avg_acc',
+                        minimize=False,
+                        use_runner_logdir=False,
+                        save_n_best=1
+                    ),
+                    dl.EarlyStoppingCallback(
+                        patience=150,
+                        loader_key='valid',
+                        metric_key='avg_acc',
+                        minimize=False,
+                        min_delta=1e-5),
+                    dl.LoaderMetricCallback(
+                        metric=CustomMetric(),
+                        input_key=['embeddings_first', 'embeddings_second', 'temperature'],
+                        target_key=['embeddings_second']
+                    ),
+                ],
+                verbose=True
+            )
+            
+            with open(trial_dump_folder + '/lsi_transformer.pickle', 'wb') as f:
+                pickle.dump(lsi_transformer_gex, f)
     
     
-    
-else: #train on phase2 data
+else:
     import config_ATAC2GEX as config
     test_indexes = sol_train.obs.batch == 's1d1'
     train_indexes = sol_train.obs.batch != 's1d1'
@@ -99,68 +164,60 @@ else: #train on phase2 data
     dataloader_train = torch.utils.data.DataLoader(dataset_train, config.BATCH_SIZE, shuffle = True)
     dataloader_test = torch.utils.data.DataLoader(dataset_test, 2048, shuffle = False)
 
+    model = Modality_CLIP(
+        Encoder=Encoder, 
+        layers_dims = (
+          config.LAYERS_DIM_FIRST, 
+          config.LAYERS_DIM_GEX
+        ),
+        dropout_rates = (
+          config.DROPOUT_RATES_FIRST, 
+          config.DROPOUT_RATES_GEX
+        ),
+        dim_mod1 = 134 if mod1 == 'ADT' else config.N_LSI_COMPONENTS_FIRST,
+        dim_mod2 = config.N_LSI_COMPONENTS_GEX, 
+        output_dim = config.EMBEDDING_DIM,
+        T = config.LOG_T,
+        swap_rate_1 = 0.,
+        swap_rate_2 = 0.)
 
-model = Modality_CLIP(
-    Encoder=Encoder, 
-    layers_dims = (
-      config.LAYERS_DIM_FIRST, 
-      config.LAYERS_DIM_GEX
-    ),
-    dropout_rates = (
-      config.DROPOUT_RATES_FIRST, 
-      config.DROPOUT_RATES_GEX
-    ),
-    dim_mod1 = 134 if mod1 == 'ADT' else config.N_LSI_COMPONENTS_FIRST,
-    dim_mod2 = config.N_LSI_COMPONENTS_GEX, 
-    output_dim = config.EMBEDDING_DIM,
-    T = config.LOG_T,
-    swap_rate_1 = 0.,
-    swap_rate_2 = 0.)
-
-optimizer = torch.optim.Adam(model.parameters(), config.LR, weight_decay=config.weight_decay)
-loaders = {
-    "train": dataloader_train,
-    "valid": dataloader_test,
-}
-runner = scRNARunner()
+    optimizer = torch.optim.Adam(model.parameters(), config.LR, weight_decay=config.weight_decay)
+    loaders = {
+        "train": dataloader_train,
+        "valid": dataloader_test,
+    }
+    runner = scRNARunner()
     
-runner.train(
-    model=model,
-    optimizer=optimizer,
-    loaders=loaders,
-    num_epochs=config.N_EPOCHS,
-    callbacks=[
-        dl.OptimizerCallback(metric_key='loss'),
-        dl.CheckpointCallback(
-            logdir = par['output_pretrain'],
-            loader_key='valid',
-            metric_key='avg_acc',
-            minimize=False,
-            use_runner_logdir=False,
-            save_n_best=1
-        ),
-        dl.EarlyStoppingCallback(
-            patience=150,
-            loader_key='valid',
-            metric_key='avg_acc',
-            minimize=False,
-            min_delta=1e-5),
-        dl.LoaderMetricCallback(
-            metric=CustomMetric(),
-            input_key=['embeddings_first', 'embeddings_second', 'temperature'],
-            target_key=['embeddings_second']
-        ),
-    ],
-    verbose=True
-)
-
-if mod1 != "ADT":
+    runner.train(
+        model=model,
+        optimizer=optimizer,
+        loaders=loaders,
+        num_epochs=config.N_EPOCHS,
+        callbacks=[
+            dl.OptimizerCallback(metric_key='loss'),
+            dl.CheckpointCallback(
+                logdir = par['output_pretrain'],
+                loader_key='valid',
+                metric_key='avg_acc',
+                minimize=False,
+                use_runner_logdir=False,
+                save_n_best=1
+            ),
+            dl.EarlyStoppingCallback(
+                patience=150,
+                loader_key='valid',
+                metric_key='avg_acc',
+                minimize=False,
+                min_delta=1e-5),
+            dl.LoaderMetricCallback(
+                metric=CustomMetric(),
+                input_key=['embeddings_first', 'embeddings_second', 'temperature'],
+                target_key=['embeddings_second']
+            ),
+        ],
+        verbose=True
+    )
     with open(par['output_pretrain'] + '/lsi_GEX_transformer.pickle', 'wb') as f:
         pickle.dump(lsi_transformer_gex, f)
     with open(par['output_pretrain'] + '/lsi_ATAC_transformer.pickle', 'wb') as f:
         pickle.dump(lsi_transformer_atac, f)
-else:
-     with open(par['output_pretrain'] + '/lsi_transformer.pickle', 'wb') as f:
-        pickle.dump(lsi_transformer_gex, f)
-    
-

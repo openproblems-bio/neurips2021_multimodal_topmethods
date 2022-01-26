@@ -275,54 +275,58 @@ def get_bipartite_matching_adjacency_matrix_mk3(raw_logits, threshold_quantile=0
 
     
 if(input_test_mod1.to_df().shape[1] == 134 or input_test_mod2.to_df().shape[1]==134):
-    weight = torch.load(par['input_pretrain'] + '/best.pth', map_location='cpu')
+    out1_2 = np.zeros((input_test_mod2.to_df().shape[0], input_test_mod2.to_df().shape[0]))
+    for fold in range(0, 9):
+        path = par['input_pretrain'] + '/' + str(fold)
+        weight = torch.load(path + '/best.pth', map_location='cpu')
         
         
-    model = Modality_CLIP(Encoder, 
-                         ([512], 
-                          [512,2048,1024,2048]), 
-                         ([0.199296], 
-                          [0.03524, 0.531454, 0.254134, 0.203471]),
-                          134,
-                          256,
-                          64, 
-                          2.739896)
-    
-    with open(par['input_pretrain'] + '/lsi_transformer.pickle', 'rb') as f:
-        lsi_transformer_gex = pickle.load(f)
-    if(input_test_mod1.to_df().shape[1] == 134):
-        input_test_mod2 = lsi_transformer_gex.transform(input_test_mod2)
-        input_test_mod1 = input_test_mod1.to_df()
-    else:
-        input_test_mod1 = lsi_transformer_gex.transform(input_test_mod1)
-        input_test_mod2 = input_test_mod2.to_df()
+        model = Modality_CLIP(Encoder, 
+                             ([512, 2048], 
+                              [1024, 512]), 
+                             ([0.0221735, 0.296919], 
+                              [0.0107121, 0.254689]),
+                              134,
+                              128,
+                              64, 
+                              3.463735).to('cuda')
         
+        with open(path + '/lsi_transformer.pickle', 'rb') as f:
+            lsi_transformer_gex = pickle.load(f)
+        print(type(input_test_mod1))
+        if(input_test_mod1.to_df().shape[1] == 134):
+            input_test_mod2_df = lsi_transformer_gex.transform(input_test_mod2)
+            input_test_mod1_df = input_test_mod1.to_df()
+        else:
+            input_test_mod1_df = lsi_transformer_gex.transform(input_test_mod1)
+            input_test_mod2_df = input_test_mod2.to_df()
+            
+            
         
-    
-    model.load_state_dict(weight['model_state_dict'])
-    dataset_test = ModalityMatchingDataset(input_test_mod1, input_test_mod2, None, is_train = False)
-    data_test = torch.utils.data.DataLoader(dataset_test, 32, shuffle = False)
-    
-    all_emb_mod1 = []
-    all_emb_mod2 = []
-    indexes = []
-    model.eval();
-    for x1, x2 in data_test:
+        model.load_state_dict(weight['model_state_dict'])
+        dataset_test = ModalityMatchingDataset(input_test_mod1_df, input_test_mod2_df, None, is_train = False)
+        data_test = torch.utils.data.DataLoader(dataset_test, 32, shuffle = False)
+        
+        all_emb_mod1 = []
+        all_emb_mod2 = []
+        indexes = []
+        model.eval();
+        for x1, x2 in data_test:
+            if(x1.shape[1] == 134):
+                logits,features_mod1, features_mod2 = model(x1.to('cuda'), x2.to('cuda'))
+            elif(x1.shape[1] == 128):
+                logits, features_mod1, features_mod2 = model(x2.to('cuda'), x1.to('cuda'))
+            
+            all_emb_mod1.append(features_mod1.detach().cpu())
+            all_emb_mod2.append(features_mod2.detach().cpu())
+            
+        all_emb_mod1 = torch.cat(all_emb_mod1)
+        all_emb_mod2 = torch.cat(all_emb_mod2)
         if(x1.shape[1] == 134):
-            logits,features_mod1, features_mod2 = model(x1, x2)
-        elif(x1.shape[1] == 256):
-            logits, features_mod1, features_mod2 = model(x2, x1)
-        
-        all_emb_mod1.append(features_mod1.detach().cpu())
-        all_emb_mod2.append(features_mod2.detach().cpu())
-        
-    all_emb_mod1 = torch.cat(all_emb_mod1)
-    all_emb_mod2 = torch.cat(all_emb_mod2)
-    if(x1.shape[1] == 134):
-        out1_2 = (all_emb_mod1@all_emb_mod2.T).detach().cpu().numpy()
-    elif(x1.shape[1] == 256):
-        out1_2 = ((all_emb_mod1@all_emb_mod2.T).T).detach().cpu().numpy()
-        
+            out1_2 += (all_emb_mod1@all_emb_mod2.T).detach().cpu().numpy()
+        elif(x1.shape[1] == 128):
+            out1_2 += ((all_emb_mod1@all_emb_mod2.T).T).detach().cpu().numpy()
+            
     out1_2 = get_bipartite_matching_adjacency_matrix_mk3(out1_2, threshold_quantile=0.990)
     out1_2 = csc_matrix(out1_2)
     out = ad.AnnData(
@@ -345,7 +349,7 @@ else:
                           512,
                           64,
                           256, 
-                          3.065016)
+                          3.065016).to('cuda')
     
     with open(par['input_pretrain'] + '/lsi_GEX_transformer.pickle', 'rb') as f:
         lsi_transformer_gex = pickle.load(f)
@@ -369,9 +373,9 @@ else:
     model.eval();
     for x1, x2 in data_test:
         if(shape_1 == 116490):
-            logits,features_mod1, features_mod2 = model(x1, x2)
+            logits,features_mod1, features_mod2 = model(x1.to('cuda'), x2.to('cuda'))
         else:
-            logits, features_mod1, features_mod2 = model(x2, x1)
+            logits, features_mod1, features_mod2 = model(x2.to('cuda'), x1.to('cuda'))
             
         all_emb_mod1.append(features_mod1.detach().cpu())
         all_emb_mod2.append(features_mod2.detach().cpu())
