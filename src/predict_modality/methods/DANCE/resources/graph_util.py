@@ -1,34 +1,18 @@
+import os
 import numpy as np
 import pandas as pd
-import logging
-import math
-import json
-import re
-import argparse
 import pickle
-from sklearn.decomposition import TruncatedSVD
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-
-import anndata as ad
-import matplotlib.pyplot as plt
 
 import torch
 import torch.nn.functional as F
-import random
-from torch.utils.data import DataLoader, Dataset
 import torch.nn as nn
-import torch.optim as optim
 
 import dgl
-from dgl.heterograph import DGLBlock
-from dgl import function as fn
-from dgl.transform import reverse
 import dgl.nn as dglnn
 import pickle
 from collections import defaultdict
 
-def graph_construction(meta, train_mod1, train_mod2, test_mod1, bidirect = True):
+def graph_construction(meta, train_mod1, train_mod2, test_mod1, pretrain_path, bidirect = True):
     # Pathway Features
     mod1 = train_mod1.var['feature_types'][0]
     mod2 = train_mod2.var['feature_types'][0]
@@ -46,13 +30,13 @@ def graph_construction(meta, train_mod1, train_mod2, test_mod1, bidirect = True)
     ee=[]
 
     if mod1 == 'GEX' and mod2 == 'ADT':
-        uu, vv, ee = pickle.load(open(meta['resources_dir'] + '/pw.pkl', 'rb'))
+        uu, vv, ee = pickle.load(open(os.path.join(pretrain_path, 'pw.pkl'), 'rb'))
         ee = [e.item() for e in ee]
     elif mod1 == 'GEX' and mod2 == 'ATAC':
-        uu, vv, ee = pickle.load(open(meta['resources_dir'] + '/pw_multiome.pkl', 'rb'))
+        uu, vv, ee = pickle.load(open(os.path.join(pretrain_path, 'pw_multiome.pkl'), 'rb'))
         ee = [e.item() for e in ee]
     else:
-        with open(meta['resources_dir'] + '/h.all.v7.4.entrez.gmt') as gmt:
+        with open(os.path.join(pretrain_path, 'h.all.v7.4.entrez.gmt')) as gmt:
             gene_list = gmt.read().split()
 
         gene_sets_entrez = defaultdict(list)
@@ -67,7 +51,7 @@ def graph_construction(meta, train_mod1, train_mod2, test_mod1, bidirect = True)
             else:
                 gene_sets_entrez[gene_set_name].append(ele)
 
-        with open(meta['resources_dir'] + '/h.all.v7.4.symbols.gmt') as gmt:
+        with open(os.path.join(pretrain_path, 'h.all.v7.4.symbols.gmt')) as gmt:
             gene_list = gmt.read().split()
 
         gene_sets_symbols = defaultdict(list)

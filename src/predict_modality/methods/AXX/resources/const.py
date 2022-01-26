@@ -1,0 +1,2 @@
+PATH = '.'
+OUT_PATH = '.'

@@ -2,9 +2,11 @@ functionality:
   name: novel
   namespace: match_modality_methods
   
-  # metadata for your method
-  
   description: The approach utilizes sample representations, learned in the same way as in the CLIP model. Encoders for all of the modalities are fully connected, the dimensionality of GEX and ATAC data is reduces via LSI transform (ADT is left as-is). Then, to obtain sample pairings, a maximum weight matching on a bipartite graph is performed, where weights are cosine similarities between sample embeddings.
+  info:
+    method_label: "Novel"
+    submission_id: "169594/170690"
+    team_name: Novel
   
   authors:
     - name: Gleb Ryazantsev

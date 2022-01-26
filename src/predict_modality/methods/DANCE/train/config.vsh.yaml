@@ -72,7 +72,6 @@ platforms:
           - scanpy
           - numpy
           - torch
-          - dgl
           - dgl-cu111
           - lightgbm
           - joblib
