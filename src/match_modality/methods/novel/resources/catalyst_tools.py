@@ -72,10 +72,11 @@ class CustomMetric(metrics.ICallbackLoaderMetric):
         
         
     def compute_key_value(self):
-        all_embeddings_first = torch.cat(self.embeddings_list_first)
-        all_embeddings_second = torch.cat(self.embeddings_list_second)
+        all_embeddings_first = torch.cat(self.embeddings_list_first).detach().cpu()
+        all_embeddings_second = torch.cat(self.embeddings_list_second).detach().cpu()
         logits = all_embeddings_first@all_embeddings_second.T
-        labels = torch.arange(logits.shape[0]).to(logits.device)
+        #labels = torch.arange(logits.shape[0]).to(logits.device)
+        labels = torch.arange(logits.shape[0])
        
         del(all_embeddings_first)
         del(all_embeddings_second)
