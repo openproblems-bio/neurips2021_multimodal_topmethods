@@ -9,8 +9,10 @@ par_pretrain_dir="output/pretrain/predict_modality/"
 par_output_pretrain="${par_pretrain_dir}${meta_method_id}/"
 ## VIASH END
 
-# create
+# create dir
 [ -d "$par_output_pretrain" ] || mkdir -p "$par_output_pretrain" && echo "$par_output_pretrain"
+
+gpus=0
 
 # preprocess files
 echo ""
@@ -58,7 +60,7 @@ else
         --data_dir "$par_data_dir" \
         --output_dir "$par_output_pretrain" \
         -dp 0.2 -e 300 --lr_decay_epoch 40 --reg_loss_weight 1 \
-        --gpu_ids 1 --name pretrain1a
+        --gpu_ids $gpus --name pretrain1a
 fi
 
 # train set b
@@ -74,7 +76,7 @@ else
         --data_dir "$par_data_dir" \
         --output_dir "$par_output_pretrain" \
         -dp 0.2 -e 300 --lr_decay_epoch 40 --reg_loss_weight 1 \
-        --gpu_ids 1 --name pretrain2b
+        --gpu_ids $gpus --name pretrain2b
 fi
 
 # train set a 
@@ -91,7 +93,7 @@ else
         --output_dir "$par_output_pretrain" \
         --tfidf 2 --idf_path "$par_output_pretrain/$pretrain_dir/mod1_idf.npy" \
         -dp 0.2 -e 300 --lr_decay_epoch 40 --reg_loss_weight 1 \
-        --gpu_ids 1 --name pretrain3a
+        --gpu_ids $gpus --name pretrain3a
 fi
 
 # train set b
@@ -108,7 +110,7 @@ else
         --output_dir "$par_output_pretrain" \
         --tfidf 2 --idf_path "$par_output_pretrain/$pretrain_dir/mod1_idf.npy" \
         -dp 0.2 -e 300 --lr_decay_epoch 40 --reg_loss_weight 1 \
-        --gpu_ids 1 --name pretrain4b
+        --gpu_ids $gpus --name pretrain4b
 fi
 
 # train set c
@@ -124,7 +126,7 @@ else
         --data_dir "$par_data_dir" \
         --output_dir "$par_output_pretrain" \
         -dp 0.2 -e 300 --lr_decay_epoch 40 --reg_loss_weight 1 \
-        --gpu_ids 1 --name pretrain5c
+        --gpu_ids $gpus --name pretrain5c
 fi
 
 # train set d
@@ -140,7 +142,7 @@ else
         --data_dir "$par_data_dir" \
         --output_dir "$par_output_pretrain" \
         -dp 0.2 -e 300 --lr_decay_epoch 40 --reg_loss_weight 1 \
-        --gpu_ids 1 --name pretrain6d
+        --gpu_ids $gpus --name pretrain6d
 fi
 
 # train set c 
@@ -157,7 +159,7 @@ else
         --output_dir "$par_output_pretrain" \
         --tfidf 2 --idf_path "$par_output_pretrain/$pretrain_dir/mod1_idf.npy" \
         -dp 0.2 -e 300 --lr_decay_epoch 40 --reg_loss_weight 1 \
-        --gpu_ids 1 --name pretrain7c
+        --gpu_ids $gpus --name pretrain7c
 fi
 
 # train set d
@@ -174,7 +176,7 @@ else
         --output_dir "$par_output_pretrain" \
         --tfidf 2 --idf_path "$par_output_pretrain/$pretrain_dir/mod1_idf.npy" \
         -dp 0.2 -e 300 --lr_decay_epoch 40 --reg_loss_weight 1 \
-        --gpu_ids 1 --name pretrain8d
+        --gpu_ids $gpus --name pretrain8d
 fi
 
 # CITE ADT2GEX
@@ -197,7 +199,7 @@ else
         --output_dir "$par_output_pretrain" \
         --tfidf 2 --idf_path "$par_output_pretrain/$pretrain_dir/mod1_idf.npy" \
         -e 400 --lr_decay_epoch 80 \
-        --gpu_ids 1 --name pretrain1d
+        --gpu_ids $gpus --name pretrain1d
 fi
 
 # train set d
@@ -213,7 +215,7 @@ else
         --data_dir "$par_data_dir" \
         --output_dir "$par_output_pretrain" \
         -e 400 --lr_decay_epoch 80 \
-        --gpu_ids 1 --name pretrain2d
+        --gpu_ids $gpus --name pretrain2d
 fi
 
 # MULTIOME GEX2ATAC
@@ -236,7 +238,7 @@ else
         --output_dir "$par_output_pretrain" \
         --tfidf 2 --idf_path "$par_output_pretrain/$pretrain_dir/mod1_idf.npy" \
         -e 400 --lr_decay_epoch 80 \
-        --gpu_ids 1 --name pretrain1
+        --gpu_ids $gpus --name pretrain1
 fi
 
 # MULTIOME ATAC2GEX
@@ -259,7 +261,7 @@ else
         --data_dir "$par_data_dir" \
         --output_dir "$par_output_pretrain" \
         -e 400 --lr_decay_epoch 40 -lr 0.2 \
-        --gpu_ids 1 --name pretrain1b
+        --gpu_ids $gpus --name pretrain1b
 fi
 
 # train set b
@@ -275,5 +277,5 @@ else
         --data_dir "$par_data_dir" \
         --output_dir "$par_output_pretrain" \
         -e 400 --lr_decay_epoch 40 -lr 0.2 \
-        --gpu_ids 1 --name pretrain2b
+        --gpu_ids $gpus --name pretrain2b
 fi
