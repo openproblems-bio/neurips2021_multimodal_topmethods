@@ -75,7 +75,7 @@ functionality:
 platforms:
   - type: docker
     image: "pytorch/pytorch:1.9.0-cuda10.2-cudnn7-runtime"
-    run_args: [ "--gpus device=1 --shm-size=5G" ]
+    run_args: [ "--gpus all --shm-size=5G" ]
     setup:
       - type: python
         packages:
