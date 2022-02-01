@@ -18,6 +18,10 @@ from dgl import function as fn
 from dgl.transform import reverse
 import dgl.nn as dglnn
 
+# suggestion: use same WeightedGCN4 as run component
+# to use, uncomment the following line
+# from graph_util import graph_construction, WeightedGCN4
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('prefix')
