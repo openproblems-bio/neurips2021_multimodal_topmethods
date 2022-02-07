@@ -150,112 +150,246 @@ def graph_construction(meta, train_mod1, train_mod2, test_mod1, pretrain_path, b
     return g, batch_features
     
 class WeightedGCN4(nn.Module):
-    def __init__(self, FEATURE_SIZE, hid_feats, out_feats, bf_size, args):
+    def __init__(self, hid_feats, out_feats):
         super().__init__()
+        self.opw = args.only_pathway
+        self.npw = args.no_pathway
+        self.nrc = args.no_readout_concatenate
         
-        self.extra_encoder = nn.Linear(bf_size, hid_feats)
-        self.args = args
-
-        self.embed_cell = nn.Embedding(2, hid_feats)
+        if batch_features is not None:
+            self.extra_encoder = nn.Linear(batch_features.shape[1], hid_feats)
+        if args.overlap:
+            self.ov_encoder = nn.Linear(2, hid_feats)
+            
+        if args.cell_init == 'none':
+            self.embed_cell = nn.Embedding(2, hid_feats)
+        else:
+            self.embed_cell = nn.Linear(100, hid_feats)
+            
         self.embed_feat = nn.Embedding(FEATURE_SIZE, hid_feats)
-
+        
         self.input_linears = nn.ModuleList()
         self.input_acts = nn.ModuleList()
         self.input_norm = nn.ModuleList()
-        for i in range(2):
+        for i in range((args.embedding_layers-1)*2):
             self.input_linears.append(nn.Linear(hid_feats, hid_feats))
-        if self.args['activation'] == 'gelu':
-            for i in range(2):
+        if args.activation == 'gelu':
+            for i in range((args.embedding_layers-1)*2):
                 self.input_acts.append(nn.GELU())
-        elif self.args['activation'] == 'leaky_relu':
-            for i in range(2):
+        elif args.activation == 'prelu':
+            for i in range((args.embedding_layers-1)*2):
+                self.input_acts.append(nn.PReLU())
+        elif args.activation == 'relu':
+            for i in range((args.embedding_layers-1)*2):
+                self.input_acts.append(nn.ReLU())
+        elif args.activation == 'leaky_relu':
+            for i in range((args.embedding_layers-1)*2):
                 self.input_acts.append(nn.LeakyReLU()) 
-
-        for i in range(2):
-            self.input_norm.append(nn.GroupNorm(4, hid_feats))
-
-        self.edges = ['entail', 'occur', 'pathway']
-
+        if args.normalization == 'batch':
+            for i in range((args.embedding_layers-1)*2):
+                self.input_norm.append(nn.BatchNorm1d(hid_feats))
+        elif args.normalization == 'layer':
+            for i in range((args.embedding_layers-1)*2):
+                self.input_norm.append(nn.LayerNorm(hid_feats))
+        elif args.normalization == 'group':
+            for i in range((args.embedding_layers-1)*2):
+                self.input_norm.append(nn.GroupNorm(4, hid_feats))
+        
+        if self.opw:
+            self.edges = ['entail', 'pathway']
+        elif self.npw:
+            self.edges = ['entail', 'occur']
+        else:
+            self.edges = ['entail', 'occur', 'pathway']
+        
         self.conv_layers = nn.ModuleList()
+        if args.residual == 'res_cat':
+            self.conv_layers.append(dglnn.HeteroGraphConv(dict(zip(self.edges, [dglnn.SAGEConv(in_feats=hid_feats, out_feats=hid_feats, aggregator_type=args.agg_function, norm=None) for i in range(len(self.edges))])), aggregate='stack'))
+            for i in range(args.conv_layers-1):
+                self.conv_layers.append(dglnn.HeteroGraphConv(dict(zip(self.edges, [dglnn.SAGEConv(in_feats=hid_feats*2, out_feats=hid_feats, aggregator_type=args.agg_function, norm=None) for i in range(len(self.edges))])), aggregate='stack'))
 
-        self.conv_layers.append(dglnn.HeteroGraphConv(dict(zip(self.edges, [dglnn.SAGEConv(in_feats=hid_feats, out_feats=hid_feats, aggregator_type=self.args['agg_function'], norm=None) for i in range(len(self.edges))])), aggregate='stack'))
-        for i in range(self.args['conv_layers']-1):
-            self.conv_layers.append(dglnn.HeteroGraphConv(dict(zip(self.edges, [dglnn.SAGEConv(in_feats=hid_feats*2, out_feats=hid_feats, aggregator_type=self.args['agg_function'], norm=None) for i in range(len(self.edges))])), aggregate='stack'))
-
+        else:
+            for i in range(args.conv_layers):
+                self.conv_layers.append(dglnn.HeteroGraphConv(dict(zip(self.edges, [dglnn.SAGEConv(in_feats=hid_feats, out_feats=hid_feats, aggregator_type=args.agg_function, norm=None) for i in range(len(self.edges))])), aggregate='stack'))    
+        
         self.conv_acts = nn.ModuleList()
         self.conv_norm = nn.ModuleList()
-        if self.args['activation'] == 'gelu':
-            for i in range(self.args['conv_layers']*2):
+        if args.activation == 'gelu':
+            for i in range(args.conv_layers*2):
                 self.conv_acts.append(nn.GELU())
-        elif self.args['activation'] == 'leaky_relu':
-            for i in range(self.args['conv_layers']*2):
+        elif args.activation == 'prelu':
+            for i in range(args.conv_layers*2):
+                self.conv_acts.append(nn.PReLU())
+        elif args.activation == 'relu':
+            for i in range(args.conv_layers*2):
+                self.conv_acts.append(nn.ReLU())
+        elif args.activation == 'leaky_relu':
+            for i in range(args.conv_layers*2):
                 self.conv_acts.append(nn.LeakyReLU())
-
-        for i in range(self.args['conv_layers']*len(self.edges)):
-            self.conv_norm.append(nn.GroupNorm(4, hid_feats))
-
+            
+        if args.normalization == 'batch':
+            for i in range(args.conv_layers*len(self.edges)):
+                self.conv_norm.append(nn.BatchNorm1d(hid_feats))
+        elif args.normalization == 'layer':
+            for i in range(args.conv_layers*len(self.edges)):
+                self.conv_norm.append(nn.LayerNorm(hid_feats))
+        elif args.normalization == 'group':
+            for i in range(args.conv_layers*len(self.edges)):
+                self.conv_norm.append(nn.GroupNorm(4, hid_feats))
+        
         self.att_linears = nn.ModuleList()
+        if args.pathway_aggregation == 'attention':
+            for i in range(args.conv_layers):
+                self.att_linears.append(nn.Linear(hid_feats, hid_feats))
+        elif args.pathway_aggregation == 'one_gate':
+            for i in range(args.conv_layers):
+                self.att_linears.append(nn.Linear(hid_feats*3, hid_feats))
+        elif args.pathway_aggregation == 'two_gate': 
+            for i in range(args.conv_layers*2):
+                self.att_linears.append(nn.Linear(hid_feats*2, hid_feats))
+        elif args.pathway_aggregation == 'cat':
+            for i in range(args.conv_layers):
+                self.att_linears.append(nn.Linear(hid_feats*2, hid_feats))
+                
         self.readout_linears = nn.ModuleList()
         self.readout_acts = nn.ModuleList()
-        self.readout_linears.append(nn.Linear(hid_feats*self.args['conv_layers'], out_feats))
-
-        if self.args['activation'] == 'gelu':
-            for i in range(self.args['readout_layers']-1):
+        if self.nrc:
+            for i in range(args.readout_layers-1):
+                self.readout_linears.append(nn.Linear(hid_feats, hid_feats))
+            self.readout_linears.append(nn.Linear(hid_feats, out_feats))
+        else:
+            for i in range(args.readout_layers-1):
+                self.readout_linears.append(nn.Linear(hid_feats*args.conv_layers, hid_feats*args.conv_layers))
+            self.readout_linears.append(nn.Linear(hid_feats*args.conv_layers, out_feats))
+            
+        if args.activation == 'gelu':
+            for i in range(args.readout_layers-1):
                 self.readout_acts.append(nn.GELU())
-        elif self.args['activation'] == 'leaky_relu':
-            for i in range(self.args['readout_layers']-1):
+        elif args.activation == 'prelu':
+            for i in range(args.readout_layers-1):
+                self.readout_acts.append(nn.PReLU())
+        elif args.activation == 'relu':
+            for i in range(args.readout_layers-1):
+                self.readout_acts.append(nn.ReLU())
+        elif args.activation == 'leaky_relu':
+            for i in range(args.readout_layers-1):
                 self.readout_acts.append(nn.LeakyReLU())
 
-    def attention_agg(self, layer, h0, h):
+    def attention_agg(self, layer, h0, h, args):
         # h: h^{l-1}, dimension: (batch, hidden)
         # feats: result from two conv(cell conv and pathway conv), stacked together; dimension: (batch, 2, hidden)
         if h.shape[1]==1:
             return self.conv_norm[layer*len(self.edges)+1](h.squeeze(1))
+        elif args.pathway_aggregation == 'sum':
+            return h[:, 0, :] + h[:, 1, :]
         else:
-            h1 = self.conv_norm[layer*len(self.edges)+1](h[:, 0, :])
-            h2 = self.conv_norm[layer*len(self.edges)+2](h[:, 1, :])
-
-        return (1-self.args['pathway_alpha']) * h1 + self.args['pathway_alpha'] * h2
-
-    def conv(self, graph, layer, h, hist):
+            h1 = h[:, 0, :]
+            h2 = h[:, 1, :]
+            
+            if args.subpath_activation:
+                h1 = F.leaky_relu(h1)
+                h2 = F.leaky_relu(h2)
+                
+            h1 = self.conv_norm[layer*len(self.edges)+1](h1)
+            h2 = self.conv_norm[layer*len(self.edges)+2](h2)
+        
+        if args.pathway_aggregation == 'attention':
+            feats = torch.stack([h1, h2], 1)
+            att = torch.transpose(F.softmax(torch.matmul(feats, self.att_linears[layer](h0).unsqueeze(-1)), 1), 1, 2)
+            feats = torch.matmul(att, feats)
+            return feats.squeeze(1)
+        elif args.pathway_aggregation == 'one_gate':
+            att = torch.sigmoid(self.att_linears[layer](torch.cat([h0, h1, h2], 1)))
+            return att * h1 + (1-att) * h2
+        elif args.pathway_aggregation == 'two_gate':
+            att1 = torch.sigmoid(self.att_linears[layer*2](torch.cat([h0, h1], 1)))
+            att2 = torch.sigmoid(self.att_linears[layer*2+1](torch.cat([h0, h2], 1)))
+            return att1 * h1 + att2 * h2
+        elif args.pathway_aggregation == 'alpha':
+            return (1-args.pathway_alpha) * h1 + args.pathway_alpha * h2
+        elif args.pathway_aggregation == 'cat':
+            return self.att_linears[layer](torch.cat([h1, h2], 1))
+        
+    def conv(self, graph, layer, h, hist, args):
         h0 = hist[-1]
-        h = self.conv_layers[layer](graph, h, mod_kwargs=dict(zip(self.edges, [{'edge_weight':  F.dropout(graph.edges[self.edges[i]].data['weight'], p=self.args['edge_dropout'], training=self.training)} for i in range(len(self.edges))])))
-
-        h = {'feature': F.dropout(self.conv_acts[layer*2](self.attention_agg(layer, h0['feature'], h['feature'])), p=self.args['model_dropout'], training=self.training),
-         'cell': F.dropout(self.conv_acts[layer*2+1](self.conv_norm[layer*len(self.edges)](h['cell'].squeeze(1))), p=self.args['model_dropout'], training=self.training)}
+        h = self.conv_layers[layer](graph, h, mod_kwargs=dict(zip(self.edges, [{'edge_weight':  F.dropout(graph.edges[self.edges[i]].data['weight'], p=args.edge_dropout, training=self.training)} for i in range(len(self.edges))])))
+        
+        if args.model_dropout>0:
+            h = {'feature': F.dropout(self.conv_acts[layer*2](self.attention_agg(layer, h0['feature'], h['feature'], args)), p=args.model_dropout, training=self.training),
+             'cell': F.dropout(self.conv_acts[layer*2+1](self.conv_norm[layer*len(self.edges)](h['cell'].squeeze(1))), p=args.model_dropout, training=self.training)}
+        else:
+            h = {'feature': self.conv_acts[layer*2](self.attention_agg(layer, h0['feature'], h['feature'], args)),
+             'cell': self.conv_acts[layer*2+1](self.conv_norm[layer*len(self.edges)](h['cell'].squeeze(1)))}
+            
         return h
-
-    def forward(self, graph, batch_features):
+        
+    def forward(self, graph, batch_features, args):
         input1 = F.leaky_relu(self.embed_feat(graph.nodes['feature'].data['id']))
         input2 = F.leaky_relu(self.embed_cell(graph.nodes['cell'].data['id']))
-        input2 += F.leaky_relu(F.dropout(self.extra_encoder(batch_features), p=0.2, training=self.training))[:input2.shape[0]]
-
+        
+        if not args.no_batch_features:
+            input2 += F.leaky_relu(F.dropout(self.extra_encoder(batch_features), p=0.2, training=self.training))[:input2.shape[0]]
+        
+        if args.overlap:
+            input1 += F.leaky_relu(self.ov_encoder(gex_feature))
+            
         hfeat = input1
         hcell = input2
-        for i in range(1, 2):
+        for i in range(args.embedding_layers-1, (args.embedding_layers-1)*2):
             hfeat = self.input_linears[i](hfeat)
             hfeat = self.input_acts[i](hfeat)
-            hfeat = self.input_norm[i](hfeat)
-            hfeat = F.dropout(hfeat, p=self.args['model_dropout'], training = self.training)
-
-        for i in range(1):
+            if args.normalization != 'none':
+                hfeat = self.input_norm[i](hfeat)
+            if args.model_dropout>0:
+                hfeat = F.dropout(hfeat, p=args.model_dropout, training = self.training)
+                
+        for i in range(args.embedding_layers-1):
             hcell = self.input_linears[i](hcell)
             hcell = self.input_acts[i](hcell)
-            hcell = self.input_norm[i](hcell)
-            hcell = F.dropout(hcell, p=self.args['model_dropout'], training = self.training)
+            if args.normalization != 'none':
+                hcell = self.input_norm[i](hcell)
+            if args.model_dropout>0:
+                hcell = F.dropout(hcell, p=args.model_dropout, training = self.training)
 
         h = {'feature': hfeat, 'cell': hcell}
         hist = [h]
+        
+        for i in range(args.conv_layers):
+            if i==0 or args.residual=='none':
+                pass
+            elif args.residual == 'res_add':
+                if args.initial_residual:
+                    h = {'feature': h['feature']+hist[0]['feature'],
+                    'cell': h['cell']+hist[0]['cell']}
 
-        for i in range(self.args['conv_layers']):
-            if i>0:
-                h = {'feature': torch.cat([h['feature'], hist[0]['feature']], 1),
+                else:
+                    h = {'feature': h['feature']+hist[-2]['feature'],
+                    'cell': h['cell']+hist[-2]['cell']}
+
+            elif args.residual == 'res_cat':
+                if args.initial_residual:
+                    h = {'feature': torch.cat([h['feature'], hist[0]['feature']], 1),
                     'cell': torch.cat([h['cell'], hist[0]['cell']], 1)}
+                else:
+                    h = {'feature': torch.cat([h['feature'], hist[-2]['feature']], 1),
+                    'cell': torch.cat([h['cell'], hist[-2]['cell']], 1)}
 
-            h = self.conv(graph, i, h, hist)
+            h = self.conv(graph, i, h, hist, args)
             hist.append(h)
-
-        h = torch.cat([i['cell'] for i in hist[1:]], 1)
+        
+        if not self.nrc:
+            h = torch.cat([i['cell'] for i in hist[1:]], 1)
+        else:
+            h = h['cell']
+            
+        for i in range(args.readout_layers-1):
+            h = self.readout_linears[i](h)
+            h = F.dropout(readout_acts[i](h), p=args.model_dropout, training = self.training)
         h = self.readout_linears[-1](h)
-
+        
+        if args.output_relu == 'relu':
+            return F.relu(h)
+        elif args.output_relu == 'leaky_relu':
+            return F.leaky_relu(h)
+        
         return h

@@ -1,5 +1,5 @@
 functionality:
-  name: axx_train
+  name: simplemlp_train
   namespace: predict_modality_methods
   
   # metadata for your method

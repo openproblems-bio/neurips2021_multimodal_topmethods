@@ -2,7 +2,9 @@ import os
 import logging
 import anndata as ad
 import numpy as np
+import json
 import sys
+import re
 from scipy.sparse import csc_matrix
 
 
@@ -54,42 +56,53 @@ if mod1 == 'GEX':
     
     g, bf = graph_construction(meta, train_mod1, train_mod2, test_mod1, pretrain_path=par['input_pretrain'])
     
-    def evaluate(mod):
+    class Dict(dict):
+        __setattr__ = dict.__setitem__
+        __getattr__ = dict.__getitem__
+
+    def dict2obj(dictObj):
+        if not isinstance(dictObj, dict):
+            return dictObj
+        d = Dict()
+        for k, v in dictObj.items():
+            d[k] = dict2obj(v)
+        return d
+            
+    def evaluate(mod, args):
         mod.eval()
         with torch.no_grad():
-            logits = mod(g, bf)
+            logits = mod(g, bf, args)
             logits = logits[-TEST_SIZE:]
             return logits
     
+    def build_args(LOG_FILE_PATH):
+        string = open(LOG_FILE_PATH, 'r').readline()
+        string = string.replace('Namespace', '').replace('=', ':').replace('(', '{ ').replace(')', '}').replace("'", '"').replace(',', ',\n').replace('True', 'true').replace('False','false')
+        string = re.sub('[ ](.*?):',  r' "\1":', string)
+        args = json.loads(string)
+        return dict2obj(args)
+    
     if mod2 == 'ADT':
         y_pred = []
-        model = torch.load(os.path.join(par['input_pretrain'], 'f_alpha_conv4_mean_fullbatch_12000_phase2_inductive_batch_speration.pkl'))
-        y_pred.append(evaluate(model).numpy())
+        model_names = ['f_alpha_conv4_mean_fullbatch_12000_phase2_inductive_batch_speration.pkl', 'bf_alpha_conv4_mean_fullbatch_10000_phase2_inductive_gex2adt_2.pkl', 'bf_alpha_conv4_mean_fullbatch_12000_phase2_inductive_gex2adt_sep_2.pkl', 'bf_alpha_conv4_mean_fullbatch_15000_phase2_inductive.pkl']
         
-        model = torch.load(os.path.join(par['input_pretrain'], 'bf_alpha_conv4_mean_fullbatch_10000_phase2_inductive_gex2adt_2.pkl'))
-        y_pred.append(evaluate(model).numpy())
-        
-        model = torch.load(os.path.join(par['input_pretrain'], 'bf_alpha_conv4_mean_fullbatch_12000_phase2_inductive_gex2adt_sep_2.pkl'))
-        y_pred.append(evaluate(model).numpy())
-        
-        model = torch.load(os.path.join(par['input_pretrain'], 'bf_alpha_conv4_mean_fullbatch_15000_phase2_inductive.pkl'))
-        y_pred.append(evaluate(model).numpy())
-        
+        for model_name in model_names:
+            args = build_args(os.path.join(par['input_pretrain'], model_name).replace('.pkl', '.log'))
+            model = torch.load(os.path.join(par['input_pretrain'], model_name), map_location='cpu')
+            y_pred.append(evaluate(model, args).numpy())
+            del model, args
+
         y_pred = csc_matrix((y_pred[0]+y_pred[1]+y_pred[2]+y_pred[3])/4)
     
     elif mod2 == 'ATAC':
         y_pred = []
-        model = torch.load(os.path.join(par['input_pretrain'], 'bf_alpha_conv4_mean_fullbatch_8000_phase2_inductive_gex2atac_3.pkl'))
-        y_pred.append(evaluate(model).numpy())
+        model_names = ['bf_alpha_conv4_mean_fullbatch_8000_phase2_inductive_gex2atac_3.pkl', 'bf_alpha_conv4_mean_fullbatch_8000_phase2_inductive_gex2atac_2.pkl', 'bf_alpha_conv4_mean_fullbatch_8000_phase2_inductive_gex2atac.pkl', 'bf_alpha_conv4_mean_fullbatch_10000_phase2_inductive_gex2atac.pkl']
         
-        model = torch.load(os.path.join(par['input_pretrain'], 'bf_alpha_conv4_mean_fullbatch_8000_phase2_inductive_gex2atac_2.pkl'))
-        y_pred.append(evaluate(model).numpy())
-        
-        model = torch.load(os.path.join(par['input_pretrain'], 'bf_alpha_conv4_mean_fullbatch_8000_phase2_inductive_gex2atac.pkl'))
-        y_pred.append(evaluate(model).numpy())
-        
-        model = torch.load(os.path.join(par['input_pretrain'], 'bf_alpha_conv4_mean_fullbatch_10000_phase2_inductive_gex2atac.pkl'))
-        y_pred.append(evaluate(model).numpy())
+        for model_name in model_names:
+            args = build_args(os.path.join(par['input_pretrain'], model_name).replace('.pkl', '.log'))
+            model = torch.load(os.path.join(par['input_pretrain'], model_name), map_location='cpu')
+            y_pred.append(evaluate(model, args).numpy())
+            del model, args
         
         y_pred = csc_matrix((y_pred[0]+y_pred[1]+y_pred[2]+y_pred[3])/4)
 

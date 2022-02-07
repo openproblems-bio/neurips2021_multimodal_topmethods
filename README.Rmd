@@ -55,7 +55,8 @@ comp_df <- map_df(seq_along(comp_yamls), function(i) {
     publication_doi = ya$functionality$info$publication_doi %||% "",
     publication_url = ya$functionality$info$publication_url %||% "",
     authors_text = paste0(authors$md, collapse = ", "),
-    authors = list(authors %>% select(-md))
+    authors = list(authors %>% select(-md)),
+    dir = gsub("/[^/]+/[^/]+$", "", conf)
   )
 })
 
@@ -69,7 +70,7 @@ comp_df %>%
   transmute(
     Task = gsub("_methods", "", namespace),
     Team = team_name,
-    Method = glue::glue("[{method_label}]({conf})"),
+    Method = glue::glue("[{method_label}]({dir})"),
     Authors = authors_text
   ) %>% 
   knitr::kable()

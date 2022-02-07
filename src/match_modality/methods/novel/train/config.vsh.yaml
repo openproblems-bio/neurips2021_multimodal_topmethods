@@ -1,10 +1,10 @@
 functionality:
   name: novel_train
-  namespace: predict_modality_methods
+  namespace: match_modality_methods
   
   # metadata for your method
   
-  description: The task is solved via training encoder-decoder MLP model with one output neuron per component in the target. As an input, the encoders use representations obtained from ATAC and GEX data via LSI transform and raw ADT data. The hyperparameters of the models were found via broad hyperparameter search using the Optuna framework.
+  description: The approach utilizes sample representations, learned in the same way as in the CLIP model. Encoders for all of the modalities are fully connected, the dimensionality of GEX and ATAC data is reduces via LSI transform (ADT is left as-is). Then, to obtain sample pairings, a maximum weight matching on a bipartite graph is performed, where weights are cosine similarities between sample embeddings.
   
   authors:
     - name: Gleb Ryazantsev
@@ -30,6 +30,11 @@ functionality:
       example: "dataset_mod2.h5ad"
       description: Censored dataset.
       required: true
+    - name: "--input_train_sol"
+      type: "file"
+      example: "dataset_solution.h5ad"
+      description: "The pairing of train mod1&mod2 profiles."
+      required: true
     - name: "--input_test_mod1"
       type: "file"
       example: "dataset_test_mod1.h5ad"
@@ -39,6 +44,11 @@ functionality:
       type: "file"
       example: "dataset_test_mod2.h5ad"
       description: Censored dataset.
+      required: true
+    - name: "--input_test_sol"
+      type: "file"
+      example: "dataset_solution.h5ad"
+      description: "The pairing of train mod1&mod2 profiles."
       required: true
 
     # required outputs
@@ -53,7 +63,13 @@ functionality:
   resources:
     - type: python_script
       path: script.py
-    - path: ../resources/helper_functions.py
+    - path: ../resources/catalyst_tools.py
+    - path: ../resources/config_ADT2GEX.py
+    - path: ../resources/config_ATAC2GEX.py
+    - path: ../resources/data.py
+    - path: ../resources/models.py
+    - path: ../resources/postprocessing.py
+    - path: ../resources/preprocessing.py
       
 # target platforms
 platforms:
@@ -63,6 +79,7 @@ platforms:
     setup:
       - type: python
         packages:
+          - catalyst
           - anndata
           - scikit-learn
           - networkx

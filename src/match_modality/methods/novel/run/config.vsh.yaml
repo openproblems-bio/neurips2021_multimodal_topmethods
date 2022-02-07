@@ -1,0 +1,90 @@
+functionality:
+  name: novel
+  namespace: match_modality_methods
+  
+  description: The approach utilizes sample representations, learned in the same way as in the CLIP model. Encoders for all of the modalities are fully connected, the dimensionality of GEX and ATAC data is reduces via LSI transform (ADT is left as-is). Then, to obtain sample pairings, a maximum weight matching on a bipartite graph is performed, where weights are cosine similarities between sample embeddings.
+  info:
+    method_label: "Novel"
+    submission_id: "169594/170690"
+    team_name: Novel
+  
+  authors:
+    - name: Gleb Ryazantsev
+      email: ryazantsev.gleb@gmail.com
+      roles: [ author, maintainer ]
+    - name: Nikolay Russkikh
+      email: russkikh.nikolay@gmail.com
+      roles: [ author, maintainer ]
+    - name: Igor I
+      email: herri.i.67@gmail.com
+      roles: [ author, maintainer ]
+      
+  # parameters
+  arguments:
+    # required inputs
+    - name: "--input_train_mod1"
+      type: "file"
+      example: "dataset_censored.h5ad"
+      description: "The censored shuffled train mod1 profiles."
+      required: true
+    - name: "--input_train_mod2"
+      type: "file"
+      example: "dataset_censored.h5ad"
+      description: "The censored shuffled train mod2 profiles."
+      required: true
+    - name: "--input_train_sol"
+      type: "file"
+      example: "dataset_solution.h5ad"
+      description: "The pairing of train mod1&mod2 profiles."
+      required: true
+    - name: "--input_test_mod1"
+      type: "file"
+      example: "dataset_censored.h5ad"
+      description: "The censored shuffled test mod1 profiles."
+      required: true
+    - name: "--input_test_mod2"
+      type: "file"
+      example: "dataset_censored.h5ad"
+      description: "The censored shuffled test mod2 profiles."
+      required: true
+    - name: "--input_pretrain"
+      type: "file"
+      example: "pretrain_model"
+      description: Path to the directory containing a pretrained model.
+      required: true
+
+    # required outputs
+    - name: "--output"
+      type: "file"
+      direction: "output"
+      example: "output.h5ad"
+      description: "The predicted pairing of test mod1&mod2 profiles."
+      required: true
+      
+  # files your script needs
+  resources:
+    - type: python_script
+      path: script.py
+    - path: ../resources/catalyst_tools.py
+    - path: ../resources/config_ADT2GEX.py
+    - path: ../resources/config_ATAC2GEX.py
+    - path: ../resources/data.py
+    - path: ../resources/models.py
+    - path: ../resources/postprocessing.py
+    - path: ../resources/preprocessing.py
+      
+# target platforms
+platforms:
+  - type: docker
+    image: "pytorch/pytorch:1.9.0-cuda10.2-cudnn7-runtime"
+    run_args: [ "--gpus all --shm-size=5G" ]
+    setup:
+      - type: python
+        packages:
+          - catalyst
+          - anndata
+          - scikit-learn
+          - networkx
+
+  - type: nextflow
+    labels: [ vhighmem, vvhightime, vhighcpu, gpu]

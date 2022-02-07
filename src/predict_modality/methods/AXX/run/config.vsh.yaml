@@ -1,10 +1,11 @@
 functionality:
-  name: axx
+  name: simplemlp
   namespace: predict_modality_methods
   
   # metadata for your method
   description: Ensemble of MLPs trained on different sites
   info:
+    method_label: SimpleMLP
     submission_id: "170812"
     team_name: AXX
     # project_url: https://github.com/foo/bar
@@ -15,7 +16,7 @@ functionality:
     - name: Xueer Chen
       email: xc2579@columbia.edu
       roles: [ author, maintainer ]
-      props: { github: xuerchen, orcid: "0000-0000-0000-0000" }
+      props: { github: xuerchen }
     - name: Jiwei Liu
       email: jiweil@nvidia.com
       roles: [ author, maintainer ]
