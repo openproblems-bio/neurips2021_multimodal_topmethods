@@ -2,9 +2,13 @@ functionality:
   name: scjoint
   namespace: predict_modality_methods
   
-  # metadata for your method
-  version: dev
   description: An ensemble method including pca, nn, feature extraction.
+
+  info:
+    method_label: "scJoint"
+    submission_id: "171135"
+    team_name: scJoint
+
   authors:
     - name: Yu-Hsiu Chen
       email: yhchen.cm06g@nctu.edu.tw

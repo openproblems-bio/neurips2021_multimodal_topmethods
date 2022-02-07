@@ -44,6 +44,7 @@ meta = {
     "resources_dir": "src/predict_modality/methods/scJoint/",
 }
 ## VIASH END
+
 sys.path.append(meta["resources_dir"])
 from resources.modules.model_ae import AutoEncoder, BatchRemovalGAN
 from resources.utils.dataloader import SeqDataset
