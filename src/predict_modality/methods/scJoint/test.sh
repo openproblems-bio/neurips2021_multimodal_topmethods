@@ -1,0 +1,100 @@
+#!/bin/bash
+
+export PIPELINE_REPO="openproblems-bio/neurips2021_multimodal_viash"
+export NXF_VER=21.04.1
+export PIPELINE_VERSION=1.4.0
+method_id=scjoint
+task_id=predict_modality
+pretrain_path=output/pretrain/$task_id/$method_id
+
+# GENERATE PRETRAIN
+echo ""
+echo "######################################################################"
+echo "##                Generating pretrain weights/files                 ##"
+echo "######################################################################"
+
+target/docker/${task_id}_methods/${method_id}_train/${method_id}_train \
+  --data_dir output/datasets/$task_id \
+  --output_pretrain ${pretrain_path}
+
+echo ""
+echo "######################################################################"
+echo "##                   Generating prediction files                    ##"
+echo "######################################################################"
+
+# CITE GEX2ADT
+echo ""
+echo "CITE GEX to ADT"
+dataset_id=openproblems_bmmc_cite_phase2_rna
+dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
+pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
+
+target/docker/${task_id}_methods/${method_id}/${method_id} \
+  --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
+  --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
+  --input_test_mod1 ${dataset_path}.output_test_mod1.h5ad \
+  --input_pretrain "${pretrain_path}/gex2adt_train.output_pretrain/" \
+  --output ${pred_path}.${method_id}.output.h5ad
+
+# CITE ADT2GEX
+echo ""
+echo "CITE ADT to GEX"
+dataset_id=openproblems_bmmc_cite_phase2_mod2
+dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
+pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
+
+target/docker/${task_id}_methods/${method_id}/${method_id} \
+  --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
+  --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
+  --input_test_mod1 ${dataset_path}.output_test_mod1.h5ad \
+  --input_pretrain "${pretrain_path}/adt2gex_train.output_pretrain/" \
+  --output ${pred_path}.${method_id}.output.h5ad
+
+# MULTIOME GEX2ATAC
+echo ""
+echo "MULTIOME GEX to ATAC"
+dataset_id=openproblems_bmmc_multiome_phase2_rna
+dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
+pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
+
+target/docker/${task_id}_methods/${method_id}/${method_id} \
+  --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
+  --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
+  --input_test_mod1 ${dataset_path}.output_test_mod1.h5ad \
+  --input_pretrain "${pretrain_path}/gex2atac_train.output_pretrain/" \
+  --output ${pred_path}.${method_id}.output.h5ad
+
+# MULTIOME ATAC2GEX
+echo ""
+echo "MULTIOME ATAC to GEX"
+dataset_id=openproblems_bmmc_multiome_phase2_mod2
+dataset_path=output/datasets/$task_id/$dataset_id/$dataset_id.censor_dataset
+pred_path=output/predictions/$task_id/$dataset_id/$dataset_id
+
+target/docker/${task_id}_methods/${method_id}/${method_id} \
+  --input_train_mod1 ${dataset_path}.output_train_mod1.h5ad \
+  --input_train_mod2 ${dataset_path}.output_train_mod2.h5ad \
+  --input_test_mod1 ${dataset_path}.output_test_mod1.h5ad \
+  --input_pretrain "${pretrain_path}/atac2gex_train.output_pretrain/" \
+  --output ${pred_path}.${method_id}.output.h5ad
+
+# RUN EVALUATION
+echo ""
+echo "######################################################################"
+echo "##                      Evaluating predictions                      ##"
+echo "######################################################################"
+bin/nextflow run "$PIPELINE_REPO" \
+  -r "$PIPELINE_VERSION" \
+  -main-script "src/$task_id/workflows/evaluate_submission/main.nf" \
+  --solutionDir "output/datasets/$task_id" \
+  --predictions "output/predictions/$task_id/**.${method_id}.output.h5ad" \
+  --publishDir "output/evaluation/$task_id/$method_id/" \
+  -latest \
+  -resume \
+  -c "src/resources/nextflow_moremem.config"
+
+echo ""
+echo "######################################################################"
+echo "##                        Evaluation summary                        ##"
+echo "######################################################################"
+cat "output/evaluation/$task_id/$method_id/output.final_scores.output_json.json"

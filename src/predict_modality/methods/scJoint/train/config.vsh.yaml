@@ -1,0 +1,55 @@
+functionality:
+  name: scjoint_train
+  namespace: predict_modality_methods
+  
+  # metadata for your method
+  version: dev
+  description: An ensemble method including pca, nn, feature extraction.
+  authors:
+    - name: Yu-Hsiu Chen
+      email: yhchen.cm06g@nctu.edu.tw
+      roles: [ author, maintainer ]
+    - name: Sheng Wan
+      email: a5736735a.eecs99@g2.nctu.edu.tw
+    - name: Tung-Yu Wu
+      email: wtywty@gmail.com
+
+  # parameters
+  arguments:
+    # required inputs
+    - name: "--data_dir"
+      type: "file"
+      description: The path to the predict_modality datasets
+      required: true
+
+    # required outputs
+    - name: "--output_pretrain"
+      type: "file"
+      direction: "output"
+      example: "pretrain_model"
+      description: Path to the directory containing the pretrained models.
+      required: true
+      
+  # files your script needs
+  resources:
+    - type: bash_script
+      path: train.sh
+    # includes all code under resources/ 
+    - path: ../resources
+
+# target platforms
+platforms:
+
+  - type: docker
+    image: "pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime"
+    run_args: [ "--gpus all" ] 
+    setup:
+      - type: python
+        packages:
+          - scikit-learn
+          - anndata
+          - scanpy
+          - numpy
+
+  - type: nextflow
+    labels: [ highmem, hightime, midcpu, gpu ]
