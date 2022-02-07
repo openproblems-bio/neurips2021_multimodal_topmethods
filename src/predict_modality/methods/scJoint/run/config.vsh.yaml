@@ -13,6 +13,7 @@ functionality:
     - name: Yu-Hsiu Chen
       email: yhchen.cm06g@nctu.edu.tw
       roles: [ author, maintainer ]
+      props: { github: itscassie }
     - name: Sheng Wan
       email: a5736735a.eecs99@g2.nctu.edu.tw
     - name: Tung-Yu Wu

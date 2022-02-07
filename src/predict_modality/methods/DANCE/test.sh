@@ -3,7 +3,7 @@
 export PIPELINE_REPO="openproblems-bio/neurips2021_multimodal_viash"
 export NXF_VER=21.04.1
 export PIPELINE_VERSION=1.4.0
-method_id=submission_171129
+method_id=dance
 task_id=predict_modality
 
 # GENERATE PRETRAIN

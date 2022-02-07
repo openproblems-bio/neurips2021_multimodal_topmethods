@@ -32,7 +32,7 @@ par = {
     'input_test_mod2': 'openproblems_bmmc_multiome_phase1_mod2.censor_dataset.output_test_mod2.h5ad',
     'output': 'output.h5ad',
 }
-meta = { 'functionality_name': 'submission_171123' }
+meta = { 'functionality_name': 'lslab' }
 ## VIASH END
 
 class Net(nn.Module):

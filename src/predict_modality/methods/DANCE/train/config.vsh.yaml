@@ -1,5 +1,5 @@
 functionality:
-  name: submission_171129_train
+  name: dance_train
   namespace: predict_modality_methods
   
   # metadata for your method

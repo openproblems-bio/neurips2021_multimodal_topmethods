@@ -1,11 +1,11 @@
 functionality:
-  name: submission_170636
+  name: guanlab_dengkw_pm
   namespace: predict_modality_methods
   
   # metadata for your method
   description: A description for your method.
   info:
-    method_label: "method name"
+    method_label: "Guanlab-dengkw"
     submission_id: "170636"
     team_name: Guanlab-dengkw
     # project_url: https://github.com/foo/bar
@@ -13,10 +13,10 @@ functionality:
     # publication_url: https://arxiv.org/abs/1234.56789
 
   authors:
-    - name: John Doe
-      email: johndoe@youremailprovider.com
+    - name: Kaiwen Deng
+      email: dengkw@umich.edu
       roles: [ author, maintainer ]
-      props: { github: johndoe, orcid: "0000-1111-2222-3333" }
+      props: { github: nonztalk }
       
   # parameters
   arguments:

@@ -1,13 +1,13 @@
 functionality:
-  name: submission_171129
+  name: dance
   namespace: predict_modality_methods
   
   # metadata for your method
   description: A description for your method.
   info:
-    method_label: "method name"
+    method_label: "DANCE"
     submission_id: "171129"
-    team_name: DSE
+    team_name: DANCE
     # project_url: https://github.com/foo/bar
     # publication_doi: 10.1101/0123.45.67.890123
     # publication_url: https://arxiv.org/abs/1234.56789

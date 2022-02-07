@@ -6,7 +6,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is auto-generated from README.Rmd. Do not edit README.md. -->
 
 ```{r, echo = FALSE, message = FALSE, error = FALSE, warning = FALSE}
 library(tidyverse)
