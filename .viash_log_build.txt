@@ -1,0 +1,251 @@
+> input_train_mod1 in novel is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in novel is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_train_sol in novel is set to be required.
+> --input_train_sol <...> has to be specified when running this module standalone.
+> input_test_mod1 in novel is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod2 in novel is set to be required.
+> --input_test_mod2 <...> has to be specified when running this module standalone.
+> input_pretrain in novel is set to be required.
+> --input_pretrain <...> has to be specified when running this module standalone.
+> output in novel is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_train_mod1 in novel_train is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in novel_train is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_train_sol in novel_train is set to be required.
+> --input_train_sol <...> has to be specified when running this module standalone.
+> input_test_mod1 in novel_train is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod2 in novel_train is set to be required.
+> --input_test_mod2 <...> has to be specified when running this module standalone.
+> input_test_sol in novel_train is set to be required.
+> --input_test_sol <...> has to be specified when running this module standalone.
+> output_pretrain in novel_train is set to be required.
+> --output_pretrain <...> has to be specified when running this module standalone.
+> input_train_mod1 in clue is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in clue is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_train_sol in clue is set to be required.
+> --input_train_sol <...> has to be specified when running this module standalone.
+> input_test_mod1 in clue is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod2 in clue is set to be required.
+> --input_test_mod2 <...> has to be specified when running this module standalone.
+> input_pretrain in clue is set to be required.
+> --input_pretrain <...> has to be specified when running this module standalone.
+> output in clue is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_train_mod1 in clue_train is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in clue_train is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_train_sol in clue_train is set to be required.
+> --input_train_sol <...> has to be specified when running this module standalone.
+> output_pretrain in clue_train is set to be required.
+> --output_pretrain <...> has to be specified when running this module standalone.
+> input_train_mod1 in guanlab_dengkw_pm is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod1 in guanlab_dengkw_pm is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in guanlab_dengkw_pm is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> output in guanlab_dengkw_pm is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_train_mod1 in lslab is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod1 in lslab is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in lslab is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> output in lslab is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_train_mod1 in novel is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod1 in novel is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in novel is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_pretrain in novel is set to be required.
+> --input_pretrain <...> has to be specified when running this module standalone.
+> output in novel is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_train_mod1 in novel_train is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in novel_train is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_test_mod1 in novel_train is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod2 in novel_train is set to be required.
+> --input_test_mod2 <...> has to be specified when running this module standalone.
+> output_pretrain in novel_train is set to be required.
+> --output_pretrain <...> has to be specified when running this module standalone.
+> input_train_mod1 in simplemlp is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod1 in simplemlp is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in simplemlp is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_pretrain in simplemlp is set to be required.
+> --input_pretrain <...> has to be specified when running this module standalone.
+> output in simplemlp is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_train_mod1 in simplemlp_train is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in simplemlp_train is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> output_pretrain in simplemlp_train is set to be required.
+> --output_pretrain <...> has to be specified when running this module standalone.
+> input_train_mod1 in cajal is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod1 in cajal is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in cajal is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_pretrain in cajal is set to be required.
+> --input_pretrain <...> has to be specified when running this module standalone.
+> output in cajal is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_train_mod1 in cajal_train is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in cajal_train is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_explore_mod1 in cajal_train is set to be required.
+> --input_explore_mod1 <...> has to be specified when running this module standalone.
+> input_explore_mod2 in cajal_train is set to be required.
+> --input_explore_mod2 <...> has to be specified when running this module standalone.
+> output_pretrain in cajal_train is set to be required.
+> --output_pretrain <...> has to be specified when running this module standalone.
+> input_train_mod1 in scjoint is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod1 in scjoint is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in scjoint is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_pretrain in scjoint is set to be required.
+> --input_pretrain <...> has to be specified when running this module standalone.
+> output in scjoint is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> data_dir in scjoint_train is set to be required.
+> --data_dir <...> has to be specified when running this module standalone.
+> output_pretrain in scjoint_train is set to be required.
+> --output_pretrain <...> has to be specified when running this module standalone.
+> input_train_mod1 in rapids is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod1 in rapids is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in rapids is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> output in rapids is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_train_mod1 in dance is set to be required.
+> --input_train_mod1 <...> has to be specified when running this module standalone.
+> input_test_mod1 in dance is set to be required.
+> --input_test_mod1 <...> has to be specified when running this module standalone.
+> input_train_mod2 in dance is set to be required.
+> --input_train_mod2 <...> has to be specified when running this module standalone.
+> input_pretrain in dance is set to be required.
+> --input_pretrain <...> has to be specified when running this module standalone.
+> output in dance is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> data_dir in dance_train is set to be required.
+> --data_dir <...> has to be specified when running this module standalone.
+> output_pretrain in dance_train is set to be required.
+> --output_pretrain <...> has to be specified when running this module standalone.
+> input_mod1 in lsl_ae is set to be required.
+> --input_mod1 <...> has to be specified when running this module standalone.
+> input_mod2 in lsl_ae is set to be required.
+> --input_mod2 <...> has to be specified when running this module standalone.
+> output in lsl_ae is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_mod1 in guanlab_dengkw_je is set to be required.
+> --input_mod1 <...> has to be specified when running this module standalone.
+> input_mod2 in guanlab_dengkw_je is set to be required.
+> --input_mod2 <...> has to be specified when running this module standalone.
+> output in guanlab_dengkw_je is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_mod1 in jae is set to be required.
+> --input_mod1 <...> has to be specified when running this module standalone.
+> input_mod2 in jae is set to be required.
+> --input_mod2 <...> has to be specified when running this module standalone.
+> input_pretrain in jae is set to be required.
+> --input_pretrain <...> has to be specified when running this module standalone.
+> output in jae is set to be required.
+> --output <...> has to be specified when running this module standalone.
+> input_mod1 in jae_train is set to be required.
+> --input_mod1 <...> has to be specified when running this module standalone.
+> input_mod2 in jae_train is set to be required.
+> --input_mod2 <...> has to be specified when running this module standalone.
+> input_explore_mod1 in jae_train is set to be required.
+> --input_explore_mod1 <...> has to be specified when running this module standalone.
+> input_explore_mod2 in jae_train is set to be required.
+> --input_explore_mod2 <...> has to be specified when running this module standalone.
+> output_pretrain in jae_train is set to be required.
+> --output_pretrain <...> has to be specified when running this module standalone.
+Exporting lslab (predict_modality_methods) =docker=> target/docker/predict_modality_methods/lslab
+Exporting novel (match_modality_methods) =docker=> target/docker/match_modality_methods/novel
+Exporting cajal (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/cajal
+Exporting dance (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/dance
+[notice] Running 'docker build -t predict_modality_methods_lslab:dev /tmp/viashsetupdocker-lslab-DlJnVM'
+Exporting cajal_train (predict_modality_methods) =docker=> target/docker/predict_modality_methods/cajal_train
+[notice] Running 'docker build -t match_modality_methods_novel:dev /tmp/viashsetupdocker-novel-YrclYt'
+Exporting dance_train (predict_modality_methods) =docker=> target/docker/predict_modality_methods/dance_train
+[notice] Running 'docker build -t predict_modality_methods_cajal_train:dev /tmp/viashsetupdocker-cajal_train-iuPNlU'
+[notice] Running 'docker build -t predict_modality_methods_dance_train:dev /tmp/viashsetupdocker-dance_train-TdPBKl'
+Exporting novel (match_modality_methods) =nextflow=> target/nextflow/match_modality_methods/novel
+Exporting dance_train (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/dance_train
+Exporting lslab (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/lslab
+Exporting lsl_ae (joint_embedding_methods) =docker=> target/docker/joint_embedding_methods/lsl_ae
+Exporting novel_train (match_modality_methods) =docker=> target/docker/match_modality_methods/novel_train
+Exporting novel (predict_modality_methods) =docker=> target/docker/predict_modality_methods/novel
+Exporting cajal_train (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/cajal_train
+[notice] Running 'docker build -t joint_embedding_methods_lsl_ae:dev /tmp/viashsetupdocker-lsl_ae-4Gt61T'
+[notice] Running 'docker build -t match_modality_methods_novel_train:dev /tmp/viashsetupdocker-novel_train-hRd9S7'
+[notice] Running 'docker build -t predict_modality_methods_novel:dev /tmp/viashsetupdocker-novel-aDANoO'
+Exporting scjoint (predict_modality_methods) =docker=> target/docker/predict_modality_methods/scjoint
+[notice] Running 'docker build -t predict_modality_methods_scjoint:dev /tmp/viashsetupdocker-scjoint-DhuhH8'
+Exporting novel (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/novel
+Exporting lsl_ae (joint_embedding_methods) =nextflow=> target/nextflow/joint_embedding_methods/lsl_ae
+Exporting novel_train (predict_modality_methods) =docker=> target/docker/predict_modality_methods/novel_train
+Exporting guanlab_dengkw_je (joint_embedding_methods) =docker=> target/docker/joint_embedding_methods/guanlab_dengkw_je
+[notice] Running 'docker build -t predict_modality_methods_novel_train:dev /tmp/viashsetupdocker-novel_train-Gl1HYY'
+Exporting novel_train (match_modality_methods) =nextflow=> target/nextflow/match_modality_methods/novel_train
+[notice] Running 'docker build -t joint_embedding_methods_guanlab_dengkw_je:dev /tmp/viashsetupdocker-guanlab_dengkw_je-qsFxae'
+Exporting clue (match_modality_methods) =docker=> target/docker/match_modality_methods/clue
+Exporting scjoint (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/scjoint
+[notice] Running 'docker build -t match_modality_methods_clue:dev /tmp/viashsetupdocker-clue-fccpJI'
+Exporting scjoint_train (predict_modality_methods) =docker=> target/docker/predict_modality_methods/scjoint_train
+[notice] Running 'docker build -t predict_modality_methods_scjoint_train:dev /tmp/viashsetupdocker-scjoint_train-tGNmo7'
+Exporting novel_train (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/novel_train
+Exporting simplemlp (predict_modality_methods) =docker=> target/docker/predict_modality_methods/simplemlp
+Exporting guanlab_dengkw_je (joint_embedding_methods) =nextflow=> target/nextflow/joint_embedding_methods/guanlab_dengkw_je
+Exporting clue (match_modality_methods) =nextflow=> target/nextflow/match_modality_methods/clue
+Exporting jae (joint_embedding_methods) =docker=> target/docker/joint_embedding_methods/jae
+[notice] Running 'docker build -t predict_modality_methods_simplemlp:dev /tmp/viashsetupdocker-simplemlp-rHMF9O'
+Exporting clue_train (match_modality_methods) =docker=> target/docker/match_modality_methods/clue_train
+Exporting scjoint_train (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/scjoint_train
+[notice] Running 'docker build -t joint_embedding_methods_jae:dev /tmp/viashsetupdocker-jae-XZ2uKg'
+[notice] Running 'docker build -t match_modality_methods_clue_train:dev /tmp/viashsetupdocker-clue_train-Yu31gV'
+Exporting rapids (predict_modality_methods) =docker=> target/docker/predict_modality_methods/rapids
+[notice] Running 'docker build -t predict_modality_methods_rapids:dev /tmp/viashsetupdocker-rapids-r9jCgX'
+Exporting simplemlp (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/simplemlp
+Exporting jae (joint_embedding_methods) =nextflow=> target/nextflow/joint_embedding_methods/jae
+Exporting simplemlp_train (predict_modality_methods) =docker=> target/docker/predict_modality_methods/simplemlp_train
+Exporting clue_train (match_modality_methods) =nextflow=> target/nextflow/match_modality_methods/clue_train
+Exporting jae_train (joint_embedding_methods) =docker=> target/docker/joint_embedding_methods/jae_train
+Exporting guanlab_dengkw_pm (predict_modality_methods) =docker=> target/docker/predict_modality_methods/guanlab_dengkw_pm
+[notice] Running 'docker build -t predict_modality_methods_simplemlp_train:dev /tmp/viashsetupdocker-simplemlp_train-17xJtC'
+[notice] Running 'docker build -t joint_embedding_methods_jae_train:dev /tmp/viashsetupdocker-jae_train-qGxDFx'
+[notice] Running 'docker build -t predict_modality_methods_guanlab_dengkw_pm:dev /tmp/viashsetupdocker-guanlab_dengkw_pm-ntMldQ'
+Exporting jae_train (joint_embedding_methods) =nextflow=> target/nextflow/joint_embedding_methods/jae_train
+Exporting guanlab_dengkw_pm (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/guanlab_dengkw_pm
+Exporting simplemlp_train (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/simplemlp_train
+Exporting cajal (predict_modality_methods) =docker=> target/docker/predict_modality_methods/cajal
+[notice] Running 'docker build -t predict_modality_methods_cajal:dev /tmp/viashsetupdocker-cajal-vWCT1s'
+Exporting rapids (predict_modality_methods) =nextflow=> target/nextflow/predict_modality_methods/rapids
+Exporting dance (predict_modality_methods) =docker=> target/docker/predict_modality_methods/dance
+[notice] Running 'docker build -t predict_modality_methods_dance:dev /tmp/viashsetupdocker-dance-eAvxcd'

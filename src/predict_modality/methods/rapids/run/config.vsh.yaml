@@ -1,22 +1,22 @@
 functionality:
-  name: guanlab_dengkw_pm
+  name: rapids
   namespace: predict_modality_methods
   
   # metadata for your method
   description: A description for your method.
   info:
-    method_label: "Guanlab-dengkw"
+    method_label: "rapids"
     submission_id: "170636"
-    team_name: Guanlab-dengkw
+    team_name: rapids
     # project_url: https://github.com/foo/bar
     # publication_doi: 10.1101/0123.45.67.890123
     # publication_url: https://arxiv.org/abs/1234.56789
 
   authors:
-    - name: Kaiwen Deng
-      email: dengkw@umich.edu
+    - name: Jiwei Liu
+      email: jiweil@nvidia.com
       roles: [ author, maintainer ]
-      props: { github: nonztalk }
+      props: { github: daxiongshu }
       
   # parameters
   arguments:
@@ -61,7 +61,8 @@ functionality:
 # target platforms
 platforms:
   - type: docker
-    image: dataintuitive/randpy:py3.8
+    image: rapidsai/rapidsai-core:22.02-cuda11.5-base-ubuntu20.04-py3.8
+    run_args: [ "--gpus all --ipc=host"]
     setup:
 
       - type: python
@@ -73,4 +74,4 @@ platforms:
           - scanpy
 
   - type: nextflow
-    labels: [ vhighmem, vvhightime, vhighcpu ]
+    labels: [ vhighmem, vvhightime, vhighcpu, gpu]
