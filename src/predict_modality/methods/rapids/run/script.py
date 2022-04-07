@@ -11,6 +11,7 @@
 import logging
 import anndata as ad
 
+import numpy as np
 from scipy.sparse import csc_matrix
 
 from cuml.decomposition import TruncatedSVD
@@ -75,11 +76,14 @@ logging.info('Running Linear regression...')
 reg = LinearRegression()
 
 # Train the model on the PCA reduced modality 1 and 2 data
-reg.fit(X_train, y_train)
-y_pred = reg.predict(X_test)
+y_pred = []
+for i in range(y_train.shape[1]):
+    reg.fit(X_train, y_train[:,i])
+    y_pred.append(reg.predict(X_test))
+y_pred = np.array(y_pred).T
 
 # Project the predictions back to the modality 2 feature space
-y_pred = y_pred @ embedder_mod2.components_
+y_pred = y_pred @ embedder_mod2.components_.to_output('numpy')
 
 # Store as sparse matrix to be efficient. Note that this might require
 # different classifiers/embedders before-hand. Not every class is able
