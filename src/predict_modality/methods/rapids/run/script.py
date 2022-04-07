@@ -13,8 +13,8 @@ import anndata as ad
 
 from scipy.sparse import csc_matrix
 
-from sklearn.decomposition import TruncatedSVD
-from sklearn.linear_model import LinearRegression
+from cuml.decomposition import TruncatedSVD
+from cuml.linear_model import LinearRegression
 
 logging.basicConfig(level=logging.INFO)
 
@@ -51,11 +51,11 @@ input_train = ad.concat(
 # Do PCA on the input data
 logging.info('Performing dimensionality reduction on modality 1 values...')
 embedder_mod1 = TruncatedSVD(n_components=50)
-mod1_pca = embedder_mod1.fit_transform(input_train.X)
+mod1_pca = embedder_mod1.fit_transform(input_train.X.toarray())
 
 logging.info('Performing dimensionality reduction on modality 2 values...')
 embedder_mod2 = TruncatedSVD(n_components=50)
-mod2_pca = embedder_mod2.fit_transform(input_train_mod2.X)
+mod2_pca = embedder_mod2.fit_transform(input_train_mod2.X.toarray())
 
 # split dimred back up
 X_train = mod1_pca[input_train.obs['group'] == 'train']
