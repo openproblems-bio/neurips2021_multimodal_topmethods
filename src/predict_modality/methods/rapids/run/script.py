@@ -25,9 +25,7 @@ par = {
     'input_train_mod1': 'sample_data/openproblems_bmmc_multiome_starter/openproblems_bmmc_multiome_starter.train_mod1.h5ad',
     'input_train_mod2': 'sample_data/openproblems_bmmc_multiome_starter/openproblems_bmmc_multiome_starter.train_mod2.h5ad',
     'input_test_mod1': 'sample_data/openproblems_bmmc_multiome_starter/openproblems_bmmc_multiome_starter.test_mod1.h5ad',
-    'distance_method': 'minkowski',
     'output': 'output.h5ad',
-    'n_pcs': 50,
 }
 ## VIASH END
 
